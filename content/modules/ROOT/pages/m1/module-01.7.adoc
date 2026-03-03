@@ -28,11 +28,11 @@ kafka-topics.sh --bootstrap-server $BOOTSTRAP \
   --create --topic replicated --partitions 3 --replication-factor 3
 ----
 
-* https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka[streams console, window="_amqstreams"] > topics > replicatedに移動し、topic `replicated`が3つのpartitionで作成されていることを確認します。
+* https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka[streams console, window="_amqstreams"] > topics > replicatedに移動し、topic `replicated` が3つのpartitionで作成されていることを確認します。
 +
 image::m1/replicated-topic.png[]
 
-* topic名`replicated`をクリックし、partitionsタブに移動してtopicの詳細を表示します。各partitionに1つのleaderと2つのreplicaがあることがわかります。
+* topic名 `replicated` をクリックし、partitionsタブに移動してtopicの詳細を表示します。各partitionに1つのleaderと2つのreplicaがあることがわかります。
 +
 image::m1/replicated-topic-partitions.png[]
 

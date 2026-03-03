@@ -17,21 +17,21 @@ i=1; while true; do echo "k$((i%10)):msg-$i"; i=$((i+1)); sleep 0.3; done | \
   --property key.separator=:
 ----
 
-* producerが開始してから *10秒間* 待って、いくつかのメッセージが生成されるようにします。生成されるメッセージは`k1:msg-1`、`k2:msg-2`などの`key:value`形式になります。
+* producerが開始してから *10秒間* 待って、いくつかのメッセージが生成されるようにします。生成されるメッセージは `k1:msg-1`、`k2:msg-2` などの `key:value` 形式になります。
 
 NOTE: console producerはメッセージが正常に生成された際に確認メッセージを出力しないため、ターミナルには何も表示されません。次のステップに進む前に10秒待ってください。
 
 * (Ctrl+C)を押してproducerを停止します。
 
-* https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka[streams console, window="_amqstreams"] > topics > demoに移動して、topic `demo`に生成されたメッセージを確認します。`k0`から`k9`までのkeyを持つメッセージがtopicに生成されているはずです。
+* https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka[streams console, window="_amqstreams"] > topics > demoに移動して、topic `demo` に生成されたメッセージを確認します。`k0` から `k9` までのkeyを持つメッセージがtopicに生成されているはずです。
 +
 image::m1/console_key_messages_pairs.png[]
 
-* messagesタブから、key `k1`でメッセージをフィルタリングします。検索ボックス内の既存のテキストを削除して`k1`と入力し、Enterを押します。key `k1`を持つすべてのメッセージが同じpartitionにあることを確認できます。
+* messagesタブから、key `k1` でメッセージをフィルタリングします。検索ボックス内の既存のテキストを削除して `k1` と入力し、Enterを押します。key `k1` を持つすべてのメッセージが同じpartitionにあることを確認できます。
 +
 image::m1/console_keys_messages.png[]
 
-* `k2`、`k3`などの他のkeyでも同じことを試してみて、同じkeyを持つすべてのメッセージが同じpartitionに送られることを確認してください。
+* `k2`、`k3` などの他のkeyでも同じことを試してみて、同じkeyを持つすべてのメッセージが同じpartitionに送られることを確認してください。
 
 Kafkaはpartitionerを使用して、keyに基づいてメッセージがどのpartitionに送られるかを決定します。デフォルトでは、Kafkaはkeyに対してハッシュ関数を使用して、メッセージが送られるpartitionを決定します。これにより、同じkeyを持つメッセージは常に同じpartitionに送られ、同じkeyを持つメッセージの順序を維持するために重要です。
 

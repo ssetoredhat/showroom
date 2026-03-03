@@ -48,7 +48,7 @@ sdk install java 21.0.2-tem && sdk use java 21.0.2-tem
 
 * ターミナル出力でjava 21を使用していることを確認してください。
 
-* 左側のfile explorerで、`module-kafka-api`フォルダを展開し、次に`src/main/resources`フォルダを展開します。`application.properties`ファイルをクリックして開きます。
+* 左側のfile explorerで、`module-kafka-api` フォルダを展開し、次に `src/main/resources` フォルダを展開します。`application.properties` ファイルをクリックして開きます。
 
 * bootstrap serversのプレースホルダ値(6行目)を次の値に置き換えます。
 +
@@ -87,13 +87,13 @@ Main Menu:
 Enter your choice:
 ----
 
-* `1`を入力して *オプション* 1を選択し、Enterキーを押します。
+* `1` を入力して *オプション* 1を選択し、Enterキーを押します。
 
 * *Enter* キーを押し続けてデフォルト値を受け入れます。これによりproducerがメッセージを送信するトリガーになります。
 
 * ターミナル出力にエラーが継続的にスローされることを確認できます。エラーを確認した後、*ctrl+c* を押してproducerを停止します。
 
-* エラーメッセージは次のようになり、topic `tutorial-topic`が存在しないことを示しています。
+* エラーメッセージは次のようになり、topic `tutorial-topic` が存在しないことを示しています。
 +
 [source,bash]
 ----
@@ -103,11 +103,11 @@ Error while fetching metadata with correlation id 57 : {tutorial-topic=UNKNOWN_T
 
 * *ctrl+c* を押してproducerを停止します。
 
-* このclusterでは *auto.create.topics.enable* プロパティが`false`に設定されています。これは、producerまたはconsumerが存在しないtopicにアクセスしようとした時に、 *新しいtopicが自動的に作成されるかどうかを制御する* Kafka brokerの設定です。
+* このclusterでは *auto.create.topics.enable* プロパティが `false` に設定されています。これは、producerまたはconsumerが存在しないtopicにアクセスしようとした時に、 *新しいtopicが自動的に作成されるかどうかを制御する* Kafka brokerの設定です。
 
 * この設定は、producerまたはconsumerコードのタイプミスからジャンクtopicが作成されることを防ぐため、有用な設定です。
 
-* devspacesターミナルで`clear`と入力してEnterキーを押し、ターミナル出力をクリアします。
+* devspacesターミナルで `clear` と入力してEnterキーを押し、ターミナル出力をクリアします。
 
 * それでは、topicを作成しましょう。次のコマンドを実行します。
 +
@@ -125,7 +125,7 @@ bash -lc '/opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-kafka-bootstra
 ./run.sh
 ----
 
-* `1`を入力してEnterキーを押し、producerを実行します。
+* `1` を入力してEnterキーを押し、producerを実行します。
 
 * producerは、keyとvalueを持つ *10個のメッセージ* を自動的に送信するように設定されています。各メッセージは約 *30バイト* です。
 
@@ -133,7 +133,7 @@ bash -lc '/opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-kafka-bootstra
 
 
 
-* 次のオプションは *linger.ms* です。アプリケーションのデフォルト値は0で、これはproducerがメッセージを送信する前にメッセージが蓄積されるのを待たないことを意味します。`30000`を入力してEnterキーを押します。以下の値を入力してEnterキーを押します。
+* 次のオプションは *linger.ms* です。アプリケーションのデフォルト値は0で、これはproducerがメッセージを送信する前にメッセージが蓄積されるのを待たないことを意味します。`30000` を入力してEnterキーを押します。以下の値を入力してEnterキーを押します。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
@@ -180,7 +180,7 @@ Total batches across all partitions: 3
 
 * 次に、 *Enter* キーを押してメインメニューに戻ります
 
-* `1`を押して再度 *Enter* キーを押し、producerを再度実行します。
+* `1` を押して再度 *Enter* キーを押し、producerを再度実行します。
 
 * バッチサイズ(16 KB)とlinger.ms(0)秒の *デフォルト値* を受け入れます。Enterキーを押す前に、何が起こるかを推測し、出力を観察してください。
 
@@ -188,7 +188,7 @@ Total batches across all partitions: 3
 
 * Enterキーを押して
 
-* `3`を入力して再度Enterキーを押し、アプリケーションを終了します。
+* `3` を入力して再度Enterキーを押し、アプリケーションを終了します。
 
 === まとめ
 このセクションが、producer APIの高レベルの理解を得て、いくつかのproducer設定が実際に動作することを確認するのに役立ったことを願います。

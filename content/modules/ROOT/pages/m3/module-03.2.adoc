@@ -15,9 +15,9 @@ KTable<String, ProductScore> productLikes =
     builder.stream(trackingEventTopic, Consumed.with(Serdes.String(), Serdes.String()));
 ----
 
-** Kafka TopicからStreamを作成 - `builder.stream(...)`は、Kafka Streamsに対してKafka topicから連続的なレコードフローの読み取りを開始するよう指示します。
+** Kafka TopicからStreamを作成 - `builder.stream(...)` は、Kafka Streamsに対してKafka topicから連続的なレコードフローの読み取りを開始するよう指示します。
 
-** Serializers/Deserializers - `Consumed.with(Serdes.String(), Serdes.String())`は、Kafka Streamsにデータの読み取り方法を指示します。ここでは、keyとvalueの両方がプレーンな文字列です。
+** Serializers/Deserializers - `Consumed.with(Serdes.String(), Serdes.String())` は、Kafka Streamsにデータの読み取り方法を指示します。ここでは、keyとvalueの両方がプレーンな文字列です。
 
 
 * *変換と集約(Line 47-51)* - このブロックは、生のユーザーアクティビティメッセージを取得 → 解析 → 無関係なものをフィルタリング → 製品スコアに変換 → 製品ごとにグループ化 → 最後に「いいね」を集約します。

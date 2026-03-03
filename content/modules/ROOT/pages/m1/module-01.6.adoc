@@ -38,7 +38,7 @@ i=1; while true; do echo "k$((i%10)):msg-$i"; i=$((i+1)); sleep 0.3; done | \
 exit
 ----
 
-* *下部のターミナル* で、`kafka-{user_name}`プロジェクトにいることを確認します。
+* *下部のターミナル* で、`kafka-{user_name}` プロジェクトにいることを確認します。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
@@ -57,7 +57,7 @@ curl -s https://raw.githubusercontent.com/streams-kafka-workshop/workshop_script
 +
 image::m1/demo-cg.png[]
 
-* 現在1つのconsumer（cg-c1）しかないため、topic `demo`のすべてのpartitionが割り当てられます。すべてのpartitionに送信されたすべてのメッセージは、この単一のconsumer（cg-c1）によってconsumeされます。
+* 現在1つのconsumer（cg-c1）しかないため、topic `demo` のすべてのpartitionが割り当てられます。すべてのpartitionに送信されたすべてのメッセージは、この単一のconsumer（cg-c1）によってconsumeされます。
 +
 image::m1/demo-cg-c1.png[]
 
