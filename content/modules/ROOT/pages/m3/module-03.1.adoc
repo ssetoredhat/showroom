@@ -6,7 +6,7 @@ include::../style.adoc[]
 
 
 
-* {streams} https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka[console, window="_amqstreams"] のtopicリストに戻ると（左側の*Topics*をクリック）、*globex.recommendation*で始まる複数のtopicがあることに気付くでしょう。これらは、Kafka Streams APIを使用してユーザーアクティビティストリームに基づいて最も人気のある製品のリストを計算する_recommendation engine_アプリケーションによって作成されたtopicです。
+* {streams} https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka[console, window="_amqstreams"] のtopicリストに戻ると（左側の *Topics* をクリック）、*globex.recommendation* で始まる複数のtopicがあることに気付くでしょう。これらは、Kafka Streams APIを使用してユーザーアクティビティストリームに基づいて最も人気のある製品のリストを計算する_recommendation engine_アプリケーションによって作成されたtopicです。
 +
 image::m3/globex-recommendation-topics-console.png[]
 
@@ -34,7 +34,7 @@ image::m3/swagger-ui-activity-tracking-simulator.png[]
 +
 image::m3/swagger-ui-activity-tracking-simulator-post-try.png[]
 
-* 必要に応じて、生成されるユーザーアクティビティの数を変更できます（デフォルトは100）。*Execute*をクリックして、シミュレータへのRESTコールを実行します。
+* 必要に応じて、生成されるユーザーアクティビティの数を変更できます（デフォルトは100）。*Execute* をクリックして、シミュレータへのRESTコールを実行します。
 +
 image::m3/swagger-ui-activity-tracking-simulator-2.png[]
 

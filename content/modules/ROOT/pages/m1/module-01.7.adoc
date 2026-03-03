@@ -20,7 +20,7 @@ image::m1/replication-broker.png[]
 
 
 
-* **上部のターミナル**で、replication factorが3の新しいtopicを作成します。
+* **上部のターミナル** で、replication factorが3の新しいtopicを作成します。
 +
 [source,sh,role="execute",subs=attributes+]
 ----

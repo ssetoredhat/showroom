@@ -30,7 +30,7 @@ image::m2/login-openshift.png[]
 +
 image::m2/devspaces-launch.png[]
 
-* workspaceが起動したら、*Yes, I trust the authors*をクリックして続行します。
+* workspaceが起動したら、*Yes, I trust the authors* をクリックして続行します。
 +
 image::m2/devspaces-trust.png[]
 
@@ -38,14 +38,14 @@ image::m2/devspaces-trust.png[]
 +
 image::m2/module-kafka-api-pom-xml.png[]
 
-* *pom.xmlファイル(23-29行目)*のdependenciesセクションを見てください。プロジェクトがKafka client libraryに依存していることがわかります。このlibraryは、Kafka clusterと対話するために必要なclassとmethodを提供します。
+* *pom.xmlファイル(23-29行目)* のdependenciesセクションを見てください。プロジェクトがKafka client libraryに依存していることがわかります。このlibraryは、Kafka clusterと対話するために必要なclassとmethodを提供します。
 +
 image::m2/module-kafka-api-dependencies.png[]
 
 
 === Kafka Producer API (Java)の理解
 
-このセクションでは、コードを分解し、**Kafka Producer**がどのように設定され、内部でどのように機能するかを説明します。
+このセクションでは、コードを分解し、**Kafka Producer** がどのように設定され、内部でどのように機能するかを説明します。
 
 * それでは、producerコードを見てみましょう。`module-kafka-api`フォルダで、file explorerの*src/main/java/com/kafka/tutorial/SimpleKafkaProducer.java*ファイルをクリックして開きます。
 +
@@ -65,7 +65,7 @@ image::m2/simple-kafka-producer-nav.png[]
 
 [IMPORTANT]
 ====
-このセクションの残りの部分では、Kafka producerで使用可能なさまざまな設定オプションと、コードでのそれらの使用方法について説明します。これらのオプションに既に精通している場合、または時間を節約するためにコードの実行に直接進みたい場合は、**このセクションをスキップしてlink:module-02.2.html[次のセクション]**に進み、producerアプリケーションを実行してください。
+このセクションの残りの部分では、Kafka producerで使用可能なさまざまな設定オプションと、コードでのそれらの使用方法について説明します。これらのオプションに既に精通している場合、または時間を節約するためにコードの実行に直接進みたい場合は、**このセクションをスキップしてlink:module-02.2.html[次のセクション]** に進み、producerアプリケーションを実行してください。
 ====
 
 

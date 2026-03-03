@@ -4,7 +4,7 @@ include::../style.adoc[]
 == このモジュールの完了おめでとうございます！
 image::m1/roundup-image.png[]
 
-おめでとうございます！Red Hat Streams for Apache Kafkaの基礎を正常に学習しました。学習した内容には、*topic、partition、producer、consumer、consumer group、replicationとfault tolerance*が含まれます。
+おめでとうございます！Red Hat Streams for Apache Kafkaの基礎を正常に学習しました。学習した内容には、*topic、partition、producer、consumer、consumer group、replicationとfault tolerance* が含まれます。
 
 == 次のステップ
 次のモジュールに進んで、Kafka APIを使用してKafka topicからデータをproduceおよびconsumeするアプリケーションの記述方法を学習してください。

@@ -5,7 +5,7 @@ include::../style.adoc[]
 == Kafka基礎 - PartitioningとKeys
 前に学習したように、keyを使用すると、同じkeyを持つレコード/メッセージは同じpartitionに送られます。実際に動作を見てみましょう。
 
-* *上部のターミナル*で、key-valueペアの複数のメッセージを送信する新しいproducerを実行します。これにより、同じkeyを持つメッセージが同じtopic partitionに送られることが保証されます。
+* *上部のターミナル* で、key-valueペアの複数のメッセージを送信する新しいproducerを実行します。これにより、同じkeyを持つメッセージが同じtopic partitionに送られることが保証されます。
 +
 [source,sh,role="execute",subs=attributes+]
 ----

@@ -55,7 +55,7 @@ Kafkaは、以下を組み合わせているため、最も広く使用されて
 === {streams}とは？
 ネイティブサポートなしでOpenShift上でKafkaを実行するのは複雑になる可能性があります。StatefulSetやServiceなどの標準リソースでKafkaを直接デプロイすることは可能ですが、そのプロセスはエラーが発生しやすく、時間がかかります。これは、アップグレードや構成の更新などの運用で特に顕著です。{streams}はこの複雑さを大幅に軽減し、以下の利点を提供します:
 
-*{streams}* は OpenShift/Kubernetes向けに構築されたKafkaです。この製品は、Strimziではできないものの、Red Hat Enterprise Linux (RHEL)やサポート対象のJVMをサポートする他のシステムにもデプロイできます。*{streams}*は以下の利点を提供します:
+*{streams}* は OpenShift/Kubernetes向けに構築されたKafkaです。この製品は、Strimziではできないものの、Red Hat Enterprise Linux (RHEL)やサポート対象のJVMをサポートする他のシステムにもデプロイできます。*{streams}* は以下の利点を提供します:
 
 * **ネイティブなOpenShift統合**: {streams}はKafkaをOpenShiftネイティブなアプリケーションに変換します。Kafka、KafkaTopic、KafkaUserなどのCustom Resources (CR)でKubernetes APIを拡張します。Custom Resourcesは、Kafkaを管理するための安定で高度に設定可能な方法を提供します。
 
@@ -71,7 +71,7 @@ Kafkaは、以下を組み合わせているため、最も広く使用されて
 
 === ワークショップの目的
 
-このワークショップでは、*{streams}*を使ったEvent Streamingの基礎を学びます。Topic、Partition、Producer、Consumer、Consumer Group、Replicationなどの主要な概念を学び、サンプルアプリケーションを使用してこれらの概念を理解する実践的な経験を得られます。
+このワークショップでは、*{streams}* を使ったEvent Streamingの基礎を学びます。Topic、Partition、Producer、Consumer、Consumer Group、Replicationなどの主要な概念を学び、サンプルアプリケーションを使用してこれらの概念を理解する実践的な経験を得られます。
 
 このワークショップは、Event Streamingが初めての開発者やアーキテクトで、リアルタイムデータパイプラインやストリーミングアプリケーションの構築にKafkaを使用する方法を学びたい方を対象としています。 
 

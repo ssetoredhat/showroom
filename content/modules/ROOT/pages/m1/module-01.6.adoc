@@ -11,13 +11,13 @@ Kafka Consumer Groupsは、Kafka topicからのスケーラブルで高可用性
 
 image::m1/consumer-group-architecture.png[]
 
-group内のconsumerへのpartitionの動的な割り当ては、*rebalancing*と呼ばれるプロセスを通じて管理されます。Rebalanceは、consumerがgroupに参加または離脱したとき、クラッシュしたとき、またはサブスクライブしているtopicのpartitionが変更されたときに発生します。
+group内のconsumerへのpartitionの動的な割り当ては、*rebalancing* と呼ばれるプロセスを通じて管理されます。Rebalanceは、consumerがgroupに参加または離脱したとき、クラッシュしたとき、またはサブスクライブしているtopicのpartitionが変更されたときに発生します。
 
 image::m1/cg-rebalance.png[]
 
 実際にどのように動作するか見てみましょう。
 
-* 再度、*上部のターミナル*でkey-valueペアのメッセージを生成するproducerを実行します。 
+* 再度、*上部のターミナル* でkey-valueペアのメッセージを生成するproducerを実行します。 
 +
 [source,sh,role="execute",subs=attributes+]
 ----
@@ -29,16 +29,16 @@ i=1; while true; do echo "k$((i%10)):msg-$i"; i=$((i+1)); sleep 0.3; done | \
   --property key.separator=:
 ----
 
-* それでは、簡単なbashスクリプトを使用して、同じconsumer group *demo-cg*で3つのconsumerを1つずつ起動しましょう。スクリプトを進めて新しいconsumerを起動し続けると、consumer間でpartitionのrebalancingが発生することがわかります。
+* それでは、簡単なbashスクリプトを使用して、同じconsumer group *demo-cg* で3つのconsumerを1つずつ起動しましょう。スクリプトを進めて新しいconsumerを起動し続けると、consumer間でpartitionのrebalancingが発生することがわかります。
 
-* toolboxコンテナ内にいる場合は、*下部のターミナル*でシェルを終了します。
+* toolboxコンテナ内にいる場合は、*下部のターミナル* でシェルを終了します。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
 exit
 ----
 
-* *下部のターミナル*で、`kafka-{user_name}`プロジェクトにいることを確認します。
+* *下部のターミナル* で、`kafka-{user_name}`プロジェクトにいることを確認します。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
@@ -46,7 +46,7 @@ oc project kafka-{user_name}
 ----
 
 
-* まず、*下部のターミナル*で以下のコマンドを実行して最初のconsumerを起動します。*2つ目のconsumerを起動するよう促されても、まだEnterを押さないでください。* 
+* まず、*下部のターミナル* で以下のコマンドを実行して最初のconsumerを起動します。*2つ目のconsumerを起動するよう促されても、まだEnterを押さないでください。* 
 +
 [source,bash,role="execute",subs=attributes+]
 ----
@@ -64,7 +64,7 @@ image::m1/demo-cg-c1.png[]
 
 
 
-* すべてのpartitionがcg-c1に割り当てられていることを確認したら、**下部のターミナル**でEnterを押して2つ目のconsumer（cg-c2）を起動します。*まだ3つ目のconsumerを起動するためにEnterを押さないでください。*
+* すべてのpartitionがcg-c1に割り当てられていることを確認したら、**下部のターミナル** でEnterを押して2つ目のconsumer（cg-c2）を起動します。*まだ3つ目のconsumerを起動するためにEnterを押さないでください。*
 
 * https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka[streams console, window="_amqstreams"]に戻って、cg-c1とcg-c2に割り当てられているpartitionを確認します。以下に示すように、rebalanceが発生し、partitionがcg-c1とcg-c2の間で再割り当てされることがわかります。
 
@@ -73,14 +73,14 @@ image::m1/demo-cg-c1.png[]
 +
 image::m1/demo-cg-c1-c2.png[]
 
-* *下部のターミナル*でEnterを押して3つ目のconsumer（cg-c3）を起動します。別のrebalanceが発生し、partitionがcg-c1、cg-c2、cg-c3の間で再割り当てされることがわかります。*まだ4つ目のconsumerを起動するためにEnterを押さないでください。*
+* *下部のターミナル* でEnterを押して3つ目のconsumer（cg-c3）を起動します。別のrebalanceが発生し、partitionがcg-c1、cg-c2、cg-c3の間で再割り当てされることがわかります。*まだ4つ目のconsumerを起動するためにEnterを押さないでください。*
 
 * https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka[streams console, window="_amqstreams"]に戻って、cg-c1、cg-c2、cg-c3に割り当てられているpartitionを確認します。
 +
 image::m1/demo-cg-c1-c2-c3.png[]
 
 
-* *下部のターミナル*でEnterを押して4つ目のconsumerを起動してください。まだEnterを押して他のconsumerを停止しないでください。
+* *下部のターミナル* でEnterを押して4つ目のconsumerを起動してください。まだEnterを押して他のconsumerを停止しないでください。
 
 * 以下に示すように、4つ目のconsumer（cg-c4）が起動されますが、partitionは割り当てられず、アイドル状態のままになることがわかります。これは、3つのpartitionと3つのconsumerがあるためです。partitionが残っていないため、4つ目のconsumerにはpartitionが割り当てられません。Kafkaは、メッセージの重複処理を避けるために、任意の時点で各partitionがconsumer groupの1つのメンバーのみによってconsumeされることを保証します。
 +
@@ -101,7 +101,7 @@ image::m1/roundup-image.png[]
 
 * https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka[streams console, window="_amqstreams"] > topics > consumer groups > demo-cgに移動し、前に起動したconsumer cg-c1を展開します。
 
-* producerが継続的にメッセージを生成し続けると、以下に示すように、各consumerのlag、committed offset、end offsetが変化し続けることを確認します。lagは基本的に*End Offset - Committed Offset*です。lag、committed offset、end offsetの値が変化していない場合は、ページを更新してください。
+* producerが継続的にメッセージを生成し続けると、以下に示すように、各consumerのlag、committed offset、end offsetが変化し続けることを確認します。lagは基本的に*End Offset - Committed Offset* です。lag、committed offset、end offsetの値が変化していない場合は、ページを更新してください。
 +
 image::m1/lag-offset.png[]
 
@@ -114,7 +114,7 @@ image::m1/group-lag.png[]
 +
 image::m1/demo-cd-c1-only.png[]
 
-* それでは、*上部のターミナル*でproducerを停止し（Ctrl+C）、*下部のターミナル*でEnterを押してすべてのconsumerも停止してください。
+* それでは、*上部のターミナル* でproducerを停止し（Ctrl+C）、*下部のターミナル* でEnterを押してすべてのconsumerも停止してください。
 
 
  
@@ -133,8 +133,8 @@ image::m1/demo-cd-c1-only.png[]
 // * A different group has its own offsets, so it can re-read the entire topic independently.
 
 === クリーンアップ
-* *上部のターミナル*で*ctrl+c*を入力してproducerを停止します。
-* *下部のターミナル*でEnterを押して、残りのすべてのconsumerを停止します。
+* *上部のターミナル* で*ctrl+c* を入力してproducerを停止します。
+* *下部のターミナル* でEnterを押して、残りのすべてのconsumerを停止します。
 
 === 次のステップ
 次のセクションでは、Topic ReplicationとFault Toleranceについて学習します。
