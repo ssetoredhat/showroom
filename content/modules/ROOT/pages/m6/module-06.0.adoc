@@ -1,26 +1,26 @@
 :imagesdir: ../../assets/images
 include::../style.adoc[]
 
-== Module 6: Securing {streams}
+== Module 6: {streams}のセキュリティ
 {m6}
 
 
-As organizations increasingly rely on Kafka for mission-critical data pipelines, securing the cluster becomes essential. This module introduces the key aspects of Kafka security and lays the foundation for building a trusted, compliant event-streaming platform.
+組織がミッションクリティカルなデータパイプラインにKafkaを使用することが増えるにつれ、クラスタのセキュリティ確保が不可欠になっています。このモジュールでは、Kafkaセキュリティの主要な側面を紹介し、信頼性が高くコンプライアンスに準拠したイベントストリーミングプラットフォームを構築するための基礎を築きます。
 
-Kafka security focuses on four main pillars:
+Kafkaのセキュリティは、4つの主要な柱に焦点を当てています。
 
-* *Authentication – Verifying who is connecting.*
-Kafka supports several authentication mechanisms such as TLS certificates (SSL), SASL/PLAIN, SCRAM, and OAuth. These ensure that only authorized clients, brokers, and users can establish connections.
+* *Authentication – 接続しているユーザーの検証*
+Kafkaは、TLS証明書(SSL)、SASL/PLAIN、SCRAM、OAuthなどの複数の認証メカニズムをサポートしています。これらにより、認可されたクライアント、Broker、ユーザーのみが接続を確立できるようになります。
 
-* *Authorization (ACLs) – controlling what each user/app is allowed to do.*
-Authorization decides which actions a specific user or client can perform on the Kafka cluster. Kafka uses Access Control Lists (ACLs) to grant or deny permissions in a detailed way—for example, a user may be allowed to read from a topic but not write to it. 
+* *Authorization (ACLs) – 各ユーザー/アプリケーションが実行できる操作の制御*
+Authorizationは、特定のユーザーまたはクライアントがKafkaクラスタで実行できるアクションを決定します。KafkaはAccess Control Lists (ACLs)を使用して、詳細な方法で権限を付与または拒否します。例えば、ユーザーはTopicから読み取ることはできても、書き込みはできないようにすることができます。
 
-* *Encryption – Protecting data in transit.*
-{streams} supports Transport Layer Security (TLS), a protocol for encrypted communication. Communication is always encrypted between Streams for Apache Kafka components. To set up TLS-encrypted communication between Kafka and clients, we can configure listeners in the Kafka custom resource.
+* *Encryption – 転送中のデータの保護*
+{streams}はTransport Layer Security (TLS)をサポートしています。これは暗号化通信のためのプロトコルです。Streams for Apache Kafkaコンポーネント間の通信は常に暗号化されます。Kafkaとクライアント間でTLS暗号化通信を設定するには、KafkaカスタムリソースでListenerを設定できます。
 
 
-=== Activity Overview
-In this module, you will learn about some of the most common Kafka security features, including authentication, authorization and encryption. We will also learn how to apply these features to your Kafka clusters.
+=== アクティビティ概要
+このモジュールでは、Authentication、Authorization、Encryptionなど、最も一般的なKafkaセキュリティ機能について学習します。また、これらの機能をKafkaクラスタに適用する方法についても学びます。
 
 
 

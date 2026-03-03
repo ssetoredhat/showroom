@@ -1,5 +1,5 @@
 
-== Lab Environment Details 
+== ラボ環境の詳細
 
 include::style.adoc[]
 
@@ -7,7 +7,7 @@ include::style.adoc[]
 [cols="25%,30%,45%", options="header", width=100%]
 
 |==================
-| Access to | URL | Credentials        
+| アクセス先 | URL | 認証情報        
 
 | Red Hat OpenShift Console| {ocp_cluster_openshift_cluster_console_url}[Console^, window="console"] | admin/{ocp_cluster_openshift_cluster_admin_password}
 

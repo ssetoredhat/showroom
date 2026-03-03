@@ -1,26 +1,26 @@
 :imagesdir: ../../assets/images
 include::../style.adoc[]
 
-== Kafka Basics - Topic Replication and Fault Tolerance
-Kafka's fault tolerance is fundamentally built upon its topic replication mechanism, ensuring data durability and high availability in the event of broker failures.
+== Kafka基礎 - Topic ReplicationとFault Tolerance
+Kafkaのフォールトトレランス（耐障害性）は、基本的にtopic replicationメカニズムに基づいて構築されており、broker障害が発生した場合にデータの耐久性と高可用性を保証します。
 
-For each partition, Kafka maintains multiple copies called replicas, distributed across different Kafka brokers:
+各partitionについて、Kafkaは異なるKafka brokerに分散されたreplicaと呼ばれる複数のコピーを維持します。
 
-** One replica is designated as the leader. All produce and consume requests for that partition are handled exclusively by its leader to ensure strong consistency and message ordering.
-** The other replicas are followers. Their sole responsibility is to diligently replicate messages from the leader to stay up-to-date. 
+** 1つのreplicaがleaderに指定されます。そのpartitionのすべてのproduceとconsumeリクエストは、強力な一貫性とメッセージの順序付けを保証するために、leaderによって排他的に処理されます。
+** 他のreplicaはfollowerです。彼らの唯一の責任は、最新の状態を保つためにleaderからメッセージを熱心にreplicationすることです。
 
-** A broker with leader partition goes down, new leader partition is elected on different node.
+** leader partitionを持つbrokerがダウンすると、新しいleader partitionが別のノードで選出されます。
 
 
 
 image::m1/replication-broker.png[]
 
 
-Let's see this in action.
+実際に動作を見てみましょう。
 
 
 
-* In the **upper terminal**, create new topic with replication factor of 3
+* **上部のターミナル**で、replication factorが3の新しいtopicを作成します。
 +
 [source,sh,role="execute",subs=attributes+]
 ----
@@ -28,29 +28,29 @@ kafka-topics.sh --bootstrap-server $BOOTSTRAP \
   --create --topic replicated --partitions 3 --replication-factor 3
 ----
 
-* Navigate to the https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka[streams console, window="_amqstreams"] > topics > replicated and verify that the topic `replicated` is created with 3 partitions
+* https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka[streams console, window="_amqstreams"] > topics > replicatedに移動し、topic `replicated`が3つのpartitionで作成されていることを確認します。
 +
 image::m1/replicated-topic.png[]
 
-* Click on the topic name `replicated` and navigate to the partitions tab to view the details of the topic. You will see that each partition has one leader and 2 replicas.
+* topic名`replicated`をクリックし、partitionsタブに移動してtopicの詳細を表示します。各partitionに1つのleaderと2つのreplicaがあることがわかります。
 +
 image::m1/replicated-topic-partitions.png[]
 
-* The number shown in the brackets is the broker id. In this case, we have 3 brokers with ids 0, 1 and 2. The leader and replicas are spread across these brokers to ensure fault tolerance.
+* 括弧内に表示されている番号はbroker idです。この場合、id 0、1、2の3つのbrokerがあります。leaderとreplicaは、フォールトトレランス（耐障害性）を確保するためにこれらのbrokerに分散されています。
 
-* Each partition has one leader and two followers (replicas). The leader handles all the read and write requests for that partition while the followers replicate data from the leader to ensure fault tolerance.
+* 各partitionには1つのleaderと2つのfollower（replica）があります。leaderはそのpartitionのすべての読み取りおよび書き込みリクエストを処理し、followerはフォールトトレランス（耐障害性）を確保するためにleaderからデータをreplicationします。
 
-* If the leader broker goes down, one of the followers will be automatically elected as the new leader to ensure high availability. This ensures that Producers and consumers, which continue to operate without interruption.
+* leader brokerがダウンすると、followerの1つが自動的に新しいleaderとして選出され、高可用性が確保されます。これにより、Producerとconsumerは中断することなく動作を継続できます。
 
-NOTE: We are not going to simulate a broker failure in this exercise, since we need them to be up and running for the rest of the module. 
+NOTE: この演習ではbroker障害をシミュレートしません。モジュールの残りの部分で稼働している必要があるためです。
 
 
-=== Summary
-* Fault tolerance is built on the topic replication mechanism. This ensures data durability and high availability in the event of broker failures.
+=== まとめ
+* フォールトトレランス（耐障害性）は、topic replicationメカニズムに基づいて構築されています。これにより、broker障害が発生した場合にデータの耐久性と高可用性が保証されます。
 
-* Replication factor ensures that each partition has one leader and multiple followers (replicas) to ensure fault tolerance.
+* Replication factorは、各partitionにフォールトトレランス（耐障害性）を確保するための1つのleaderと複数のfollower（replica）があることを保証します。
 
-* The replicas are spread across different brokers to ensure fault tolerance, so even if one broker goes down, the data is still available on other brokers.
+* replicaは異なるbrokerに分散されてフォールトトレランス（耐障害性）を確保するため、1つのbrokerがダウンしても、データは他のbrokerで引き続き利用できます。
 
 
 

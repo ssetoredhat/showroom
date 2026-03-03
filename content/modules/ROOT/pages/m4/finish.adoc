@@ -1,6 +1,6 @@
 :imagesdir: ../../assets/images
 include::../style.adoc[]
 
-== Congratulations on completing this module!
+== このモジュールの完了おめでとうございます!
 
-Congratulations! You have successfully learnt how to use Debezium to capture changes in a database and publish them to Kafka. Proceed to the next module to learn about Schema Registry and how you can use it to manage event schemas.
+おめでとうございます! データベースの変更をキャプチャしてKafkaに公開するためにDebeziumを使用する方法を習得しました。次のモジュールに進んで、Schema Registryとそれを使用してイベントスキーマを管理する方法について学習してください。

@@ -4,40 +4,40 @@ include::../style.adoc[]
 == Module 5: Schema Registry
 {m5}
 
-=== What is a schema?
-A schema is a formal description of the structure of a data type. A schema can be used to validate data at runtime and to serialize and deserialize data that is being sent or received from a Kafka topic.
+=== スキーマとは?
+スキーマはデータ型の構造を形式的に記述したものです。スキーマを使用することで、実行時にデータを検証したり、Kafkaトピックから送受信されるデータをserialize/deserializeしたりできます。
 
-=== Why use a schema?
-Using a schema provides several benefits:
+=== なぜスキーマを使うのか?
+スキーマを使用することで、以下のような複数のメリットが得られます:
 
-* *Data validation:* ensures that the data being sent or received conforms to the expected structure.    
-* *Data serialization/deserialization:* enables efficient serialization and deserialization of data, reducing the size of messages and improving performance.    
-* *Schema evolution:* allows for changes to the schema over time while maintaining compatibility with existing data.    
-* *Interoperability:* enables different systems to communicate with each other by using a common schema.
+* *データ検証:* 送受信されるデータが期待される構造に準拠していることを保証します。
+* *Data serialization/deserialization:* データの効率的なserializationとdeserializationを可能にし、メッセージサイズを削減してパフォーマンスを向上させます。
+* *スキーマ進化:* 既存のデータとの互換性を維持しながら、時間の経過とともにスキーマを変更できるようにします。
+* *相互運用性:* 共通のスキーマを使用することで、異なるシステム間の通信を可能にします。
 
 
 
 === Schema Registry
-Schema Registry is a datastore for sharing standard event schemas and API designs across event-driven and API architectures. You can use  Registry to decouple the structure of your data from your client applications, and to share and manage your data types  at runtime using a REST interface.
+Schema Registryは、イベント駆動アーキテクチャやAPIアーキテクチャ全体で標準イベントスキーマとAPI設計を共有するためのデータストアです。Registryを使用すると、データの構造をクライアントアプリケーションから分離し、REST interfaceを使用して実行時にデータ型を共有・管理できます。
 
-Client applications such as producers and consumers can dynamically push or pull the latest schema updates to or from Apicurio Registry at runtime without needing to redeploy. Developer teams can query  Registry for existing schemas required for services already deployed in production, and can register new schemas required for new services in development.
+ProducerやConsumerなどのクライアントアプリケーションは、再デプロイすることなく、実行時に最新のスキーマの更新をApicurio Registryに動的にpushしたり、pullしたりできます。開発チームは、本番環境にすでにデプロイされているサービスに必要な既存のスキーマをRegistryに問い合わせたり、開発中の新しいサービスに必要な新しいスキーマを登録したりできます。
 
 image::m5/schema-registry-diagram.png[]
 
 === Red Hat build of Apicurio Registry
-Red Hat offers a Red Hat build of Apicurio Registry, which is a schema registry on the open-source Apicurio Registry project. Client applications use the registry URL to fetch schemas for serialization/deserialization and runtime compatibility checks. A web console and optional validation/compatibility rules help manage and enforce schema evolution.
+Red Hatは、オープンソースのApicurio Registryプロジェクトに基づいたRed Hat build of Apicurio Registryを提供しています。クライアントアプリケーションはregistry URLを使用してserialization/deserializationと実行時の互換性チェックのためにスキーマを取得します。Webコンソールとオプションの検証/互換性ルールが、スキーマ進化の管理と適用を支援します。
 
-=== Apicurio Registry Capabilities
-* Multiple payload formats for standard event schema and API specifications such as Apache Avro, JSON Schema, Google Protobuf, AsyncAPI, OpenAPI, and more.
-* Pluggable Apicurio Registry storage options for storing content in Apache Kafka or PostgreSQL database.
-* Rules for content validation, compatibility, and integrity to govern how Apicurio Registry content evolves over time.
-* Apicurio Registry content management using web console, REST API, command line, Maven plug-in, or language SDKs.
-* Full Apache Kafka schema registry support, including integration with Kafka Connect for external systems.
-* Kafka client serializers/deserializers (SerDes) to validate message types at runtime.
-* Cloud-native Quarkus Java runtime for low memory footprint and fast deployment times.
-* Operator-based installation of Apicurio Registry on OpenShift/Kubernetes.
-* OpenID Connect (OIDC) authentication using Red Hat build of Keycloak.
+=== Apicurio Registryの機能
+* Apache Avro、JSON Schema、Google Protobuf、AsyncAPI、OpenAPIなどの標準イベントスキーマとAPI仕様のための複数のペイロード形式。
+* Apache KafkaまたはPostgreSQLデータベースにコンテンツを保存するためのプラグ可能なApicurio Registryストレージオプション。
+* Apicurio Registryコンテンツが時間の経過とともにどのように進化するかを管理するための、コンテンツ検証、互換性、整合性のルール。
+* Webコンソール、REST API、コマンドライン、Mavenプラグイン、または言語SDKを使用したApicurio Registryコンテンツ管理。
+* 外部システム向けのKafka Connectとの統合を含む、完全なApache Kafka schema registryサポート。
+* 実行時にメッセージ型を検証するためのKafka client serializers/deserializers (SerDes)。
+* 低メモリフットプリントと高速なデプロイ時間のためのCloud-native Quarkus Javaランタイム。
+* OpenShift/Kubernetes上のApicurio RegistryのOperatorベースのインストール。
+* Red Hat build of Keycloakを使用したOpenID Connect (OIDC)認証。
 
-=== Activity Overview
-In this module, you will explore how to use Schema Registry to manage schemas for Kafka topics. You will create a new schema for a Kafka topic, register it with Schema Registry, and then use that schema in a producer and consumer application to send and receive messages. You will also briefly explore compatibility rules for Schema Registry.
+=== アクティビティ概要
+このモジュールでは、Schema Registryを使用してKafkaトピックのスキーマを管理する方法を学びます。Kafkaトピック用の新しいスキーマを作成し、Schema Registryに登録し、そのスキーマをProducerとConsumerアプリケーションで使用してメッセージを送受信します。また、Schema Registryの互換性ルールについても簡単に学習します。
 

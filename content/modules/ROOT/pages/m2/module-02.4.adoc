@@ -4,24 +4,24 @@ include::../style.adoc[]
 :cross: ×
 
 
-== Running a Simple Consumer Application
-Let's run the simple streaming application that we analyzed in the previous sections to see the consumer in action .
+== シンプルなConsumerアプリケーションの実行
+前のセクションで分析したシンプルなストリーミングアプリケーションを実行して、consumerが実際に動作することを確認しましょう。
 
-* Go back to Devspaces IDE and clear the terminal window by typing `clear` and pressing enter.
+* Devspaces IDEに戻り、`clear`と入力してEnterキーを押してターミナルウィンドウをクリアします。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
 clear
 ----
 
-* Run the interactive application in the terminal.
+* ターミナルでインタラクティブアプリケーションを実行します。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
 ./run.sh
 ----
 
-* It should build the application in a few seconds and display a menu of options.
+* 数秒でアプリケーションがビルドされ、オプションのメニューが表示されます。
 +
 
 [source,bash]
@@ -38,65 +38,65 @@ Main Menu:
 Enter your choice:
 ----
 
-* Choose the option 2 to run the consumer. Enter the option 2 and press enter.
+* オプション2を選択してconsumerを実行します。オプション2を入力してEnterキーを押します。
 
-* First, you should be prompted to enter the value for `auto.offset.reset`
+* 最初に、`auto.offset.reset`の値を入力するように求められます
 
-* Type `latest` and press enter. 
+* `latest`と入力してEnterキーを押します。
 +
-NOTE: This property defines what the consumer should do when there is no initial offset or offset is out of range for a consumer or consumer group* *"earliest"* = start from the beginning of the topic (read all messages from the start) *"latest"* = start from the end (only read new messages sent after consumer starts)
+NOTE: このプロパティは、consumerまたはconsumer groupに初期offsetが存在しない場合、またはoffsetが範囲外の場合にconsumerがどうすべきかを定義します* *"earliest"* = topicの最初から開始(最初からすべてのメッセージを読む) *"latest"* = 終わりから開始(consumer開始後に送信された新しいメッセージのみを読む)
 
-* The next prompt asks for `fetch.min.bytes`. Press enter to use the default value.
+* 次のプロンプトで`fetch.min.bytes`を求められます。Enterキーを押してデフォルト値を使用します。
 
-* The next prompt asks for `fetch.max.wait.ms`. Press enter to use the default value.
+* 次のプロンプトで`fetch.max.wait.ms`を求められます。Enterキーを押してデフォルト値を使用します。
 
-* The next prompt asks for `Enter number of messages`. Enter the below value and press enter.
+* 次のプロンプトで`Enter number of messages`を求められます。以下の値を入力してEnterキーを押します。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
 30
 ----
 
-* Observe that the consumer doesn't read any of the messages that the producer just sent. This is because we chose the `latest` value for `auto.offset.reset` and the consumer starts from the end of the topic and it will not consume any messages that are sent before the consumer starts. You can confirm the same the double checking in the streams console.
+* consumerがproducerが送信したばかりのメッセージを読み取らないことを確認してください。これは、`auto.offset.reset`に`latest`値を選択したため、consumerがtopicの終わりから開始し、consumer開始前に送信されたメッセージは消費しないためです。streams consoleで再確認することで同じことを確認できます。
 
-* Navigate to the link:https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka/[streams console, window="_amqstreams"] > consumer groups and click on the *tutorial-consumer-group* 
+* link:https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka/[streams console, window="_amqstreams"] > consumer groupsに移動し、*tutorial-consumer-group*をクリックします
 +
 image::m2/console_tutorial-consumer-group.png[]
 
-* Observe that the overall lag for the consumer group is *zero even though the topic had some unread messages*. This is the because the consumer is reading from the end of the topic and the values of committed offset are set to the same value as end offset, which means the lag is zero.
+* consumer groupの全体的なlagが*topicに未読メッセージがあったにもかかわらずゼロ*であることを確認してください。これは、consumerがtopicの終わりから読み取っており、committed offsetの値がend offsetと同じ値に設定されているため、lagがゼロになるためです。
 +
 image::m2/console_consumer-lag-zero.png[]
 
 
-* Hit enter and press `1` again to run the producer again. Accept all the *default values and press enter*. Make sure that the messages are sent.
+* Enterキーを押して再度`1`を押し、producerを再度実行します。すべての*デフォルト値を受け入れてEnterキーを押します*。メッセージが送信されることを確認してください。
 
-* Now hit enter and press `2` again to run the consumer again. This time let's choose the *default values* for `auto.offset.reset`, `fetch.min.bytes`, `fetch.max.wait.ms` by pressing enter for the prompts.
+* それではEnterキーを押して再度`2`を押し、consumerを再度実行します。今回は、プロンプトでEnterキーを押して`auto.offset.reset`、`fetch.min.bytes`、`fetch.max.wait.ms`の*デフォルト値*を選択しましょう。
 
-* For the 'Enter number of messages' prompt. Enter the below value and press enter.
+* 'Enter number of messages'プロンプトの場合。以下の値を入力してEnterキーを押します。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
-30    
+30
 ----
 
 
-* You will observe that the consumer is now running and consumes all the messages that were just sent by the producer. The messages are displayed in the terminal.
+* consumerが実行され、producerによって送信されたばかりのすべてのメッセージを消費することが確認できます。メッセージはターミナルに表示されます。
 
 
-=== Optional exercise:Experiment with fetch.min.bytes and fetch.max.wait.ms 
-You can also experiment with different values for `fetch.min.bytes` and `fetch.max.wait.ms` to see how they affect the consumer behavior.
+=== オプション演習:fetch.min.bytesとfetch.max.wait.msで実験する
+`fetch.min.bytes`と`fetch.max.wait.ms`の異なる値で実験して、consumerの動作にどのように影響するかを確認することもできます。
 
-* Hit enter and press `1` again to run the producer again. Accept all the default values and press enter. 
+* Enterキーを押して再度`1`を押し、producerを再度実行します。すべてのデフォルト値を受け入れてEnterキーを押します。
 
-* Now hit enter and press `2` and hit enter again to run the consumer again.
+* それではEnterキーを押して`2`を押し、再度Enterキーを押してconsumerを再度実行します。
 
-* This time, for the `fetch.min.bytes` prompt, enter `1024` and press enter.
+* 今回は、`fetch.min.bytes`プロンプトに対して`1024`を入力してEnterキーを押します。
 
-* For the `fetch.max.wait.ms` prompt, enter `4000` and press enter.
+* `fetch.max.wait.ms`プロンプトに対して`4000`を入力してEnterキーを押します。
 
-* Since the number of bytes would never exceed 1024 bytes in our example, the `fetch.min.bytes` will be ignored and the consumer will wait for at-least 4 seconds before fetching the messages. You should observe a delay of approximately 4-6 seconds before the messages are displayed in the terminal.
+* この例ではバイト数が1024バイトを超えることはないため、`fetch.min.bytes`は無視され、consumerはメッセージをフェッチする前に少なくとも4秒待機します。メッセージがターミナルに表示される前に約4〜6秒の遅延が確認できるはずです。
 
-* For the *Enter number of messages* prompt. Enter the below value and press enter. You will observe the delay before the messages are displayed.
+* *Enter number of messages*プロンプトの場合。以下の値を入力してEnterキーを押します。メッセージが表示される前の遅延を確認できます。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
@@ -105,12 +105,12 @@ You can also experiment with different values for `fetch.min.bytes` and `fetch.m
 
 
 
-=== Cleanup
-* Make sure exit the application by pressing *ctrl+c* in the terminal window.
+=== クリーンアップ
+* ターミナルウィンドウで*ctrl+c*を押してアプリケーションを終了することを確認してください。
 
-=== Summary
-This section hopefully helped you get a high level understanding of the consumer api and see a couple of consumer configurations in action. Feel free to play with the other options in the application and observe the consumer behavior.
+=== まとめ
+このセクションが、consumer APIの高レベルの理解を得て、いくつかのconsumer設定が実際に動作することを確認するのに役立ったことを願います。アプリケーションの他のオプションを自由に試して、consumerの動作を観察してください。
 
-=== Up Next
-In the next section, we will look at a real world streaming application in action and understand how Quarkus makes it very easy to build streaming applications.
+=== 次のステップ
+次のセクションでは、実際のストリーミングアプリケーションが動作することを確認し、Quarkusがストリーミングアプリケーションの構築をいかに簡単にするかを理解します。
 

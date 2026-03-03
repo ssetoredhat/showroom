@@ -2,6 +2,6 @@
 include::../style.adoc[]
 
 
-== Congratulations on completing this module!
+== このモジュールの完了おめでとうございます!
 
-Congratulations! You successfully learnt how to secure kafka clusters using the different listeners and implement authorization for different users using ACLs.
+おめでとうございます! 異なるListenerを使用してKafkaクラスタをセキュアにし、ACLを使用して異なるユーザーのAuthorizationを実装する方法を学習しました。

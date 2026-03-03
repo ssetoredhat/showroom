@@ -1,21 +1,21 @@
 :imagesdir: ../../assets/images
 include::../style.adoc[]
 
-== Module 4: 
+== Module 4:
 {m4}
 
 === Change Data Capture
 
-Change Data Capture (CDC) is a well-known software pattern that refers to the process of identifying and capturing changes made to data in a database and delivering those changes in real-time to a downstream process or system, which can then react on those changes.
+Change Data Capture (CDC) は、データベース内のデータに加えられた変更を識別してキャプチャし、それらの変更をリアルタイムでダウンストリームのプロセスやシステムに配信し、変更に対して反応できるようにするプロセスを指す、よく知られたソフトウェアパターンです。
 
-Typical use cases for CDC include data replication (moving data from one data store to another), populating analytical systems and data warehouses, and data propagation to other services without coupling (one service owns the data, other services keep a local, optimized view of the data). This lab is an example of the latter use case.
+CDCの典型的なユースケースには、データレプリケーション（あるデータストアから別のデータストアへのデータ移動）、分析システムやデータウェアハウスへのデータ投入、サービス間の疎結合なデータ伝播（1つのサービスがデータを所有し、他のサービスはそのデータのローカルで最適化されたビューを保持する）などがあります。このラボは後者のユースケースの例です。
 
-In the open source world, https://debezium.io[Debezium] is the de-facto standard for CDC. Debezium records row-level changes within each database table by tailing the transaction log of the database. It transforms the captured changes into a _change event stream_.
+オープンソースの世界では、https://debezium.io[Debezium] がCDCのデファクトスタンダードです。Debeziumはデータベースのトランザクションログを追跡することで、各データベーステーブル内の行レベルの変更を記録します。キャプチャされた変更は _change event stream_ に変換されます。
 
-Most commonly, Debezium is deployed as a connector on top of Kafka Connect. Kafka Connect is a framework and runtime for implementing and operating source connectors (that send records into Kafka) and sink connectors (that propagate records from Kafka topics to other systems). Debezium is a source connector, it publishes the change event stream to Kafka topics, typically one topic per monitored database table.
+最も一般的に、DebeziumはKafka Connect上のconnectorとしてデプロイされます。Kafka Connectは、source connector（Kafkaにレコードを送信）とsink connector（KafkaトピックからレコードをKafkaトピックから他のシステムへ伝播）を実装して運用するためのフレームワークおよびランタイムです。Debeziumはsource connectorであり、change event streamをKafkaトピックに公開します。通常、監視対象のデータベーステーブルごとに1つのトピックが作成されます。
 
 image::m4/cdc-architecture.png[]
 
 
-=== Activity Overview
-In this module, you will deploy a Debezium connector to capture changes from the Globex retail application database and publish them to Kafka topics. You will then verify that the change events are being published correctly. You will also see how other applications can use the change events produced by Debezium to build event-driven applications. 
+=== アクティビティの概要
+このモジュールでは、Globex retailアプリケーションデータベースからの変更をキャプチャしてKafkaトピックに公開するDebezium connectorをデプロイします。次に、change eventが正しく公開されていることを確認します。また、Debeziumによって生成されたchange eventを他のアプリケーションがどのように使用してイベント駆動型アプリケーションを構築できるかを確認します。 

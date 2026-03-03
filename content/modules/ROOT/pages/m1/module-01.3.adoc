@@ -3,24 +3,24 @@ include::../style.adoc[]
 
 
 
-== Kafka Basics - Producer (how data gets into Kafka)
+== Kafka基礎 - Producer（データがKafkaに入る方法）
 
-A Kafka Producer is a client application responsible for writing data to a Kafka cluster. These applications send messages, which are typically key-value pairs, into topics within the Kafka cluster. In short, producers are a flexible and powerful way to send data to Kafka while abstracting away much of the underlying complexities
+Kafka Producerは、Kafka Clusterにデータを書き込む役割を担うクライアントアプリケーションです。これらのアプリケーションは、通常key-valueペアであるメッセージをKafka Cluster内のtopicに送信します。簡単に言えば、producerは基盤となる複雑さの多くを抽象化しながら、Kafkaにデータを送信する柔軟で強力な方法です。
 
-=== Core Functionality and API:
-* API: Producers interact with Kafka through the KafkaProducer API. Producers can be in written in a variety of languages such as Java,  Python, Go, JavaScript, and .NET.
+=== コア機能とAPI:
+* API: ProducerはKafkaProducer APIを通じてKafkaと対話します。ProducerはJava、Python、Go、JavaScript、.NETなどのさまざまな言語で記述できます。
 
-* Producers publish messages to a topic, which appends each message to the end of a partition. 
+* Producerはtopicにメッセージを発行し、各メッセージはpartitionの末尾に追加されます。
 
-=== Running the Producer
-* Run the basic producer in the *upper terminal*
+=== Producerの実行
+* *上部のターミナル*で基本的なproducerを実行します。
 +
 [source,sh,role="execute",subs=attributes+]
 ----
 kafka-console-producer.sh --bootstrap-server $BOOTSTRAP --topic demo
 ----
 
-* Type the below messages as soon as the producer is ready in the *upper terminal*. The producer is ready when you see the `>` prompt. Each line you type is sent as a separate message to the Kafka topic `demo`. Type each word and hit enter.
+* *上部のターミナル*でproducerの準備ができたらすぐに、以下のメッセージを入力します。`>`プロンプトが表示されたら、producerの準備が完了しています。入力した各行は、Kafka topic `demo`に個別のメッセージとして送信されます。各単語を入力してEnterを押してください。
 +
 ** `welcome`
 ** `to`
@@ -29,16 +29,16 @@ kafka-console-producer.sh --bootstrap-server $BOOTSTRAP --topic demo
 ** `workshop`
 ** `enjoy!`
 
-* Keep the producer running to send more messages in the next section.
+* 次のセクションでさらにメッセージを送信するために、producerを実行したままにしておきます。
 
 // * Hit `Ctrl + C` followed by `Enter` in the *upper terminal* to stop the producer after sending the messages.
 
-* Navigate to the https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka[streams console, window="_amqstreams"] *topics > demo* to see the messages you sent.
+* https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka[streams console, window="_amqstreams"] *topics > demo*に移動して、送信したメッセージを確認します。
 +
 image::m1/console_messages.png[]
 
-* The messages you sent from the producer are successfully received and stored in the Kafka topic `demo`. 
+* producerから送信したメッセージは正常に受信され、Kafka topic `demo`に保存されています。
 
 
-=== Up Next
-In the next section, we will learn how to consume these messages from the topic.
+=== 次のステップ
+次のセクションでは、topicからこれらのメッセージをconsumeする方法を学習します。

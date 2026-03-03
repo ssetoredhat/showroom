@@ -2,6 +2,6 @@
 include::../style.adoc[]
 
 
-== Congratulations on completing this module!
+== このモジュールの完了おめでとうございます!
 
-Congratulations! You successfully learnt how to use Red Hat build of Apicurio Registry to manage event schemas and APIs. Proceed to the next module to learn about the different ways to secure your Kafka cluster.
+おめでとうございます!Red Hat build of Apicurio Registryを使用してイベントスキーマとAPIを管理する方法を学習しました。次のモジュールに進んで、Kafkaクラスタを保護するさまざまな方法について学びましょう。

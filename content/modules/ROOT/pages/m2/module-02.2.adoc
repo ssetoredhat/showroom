@@ -4,24 +4,24 @@ include::../style.adoc[]
 :cross: ×
 
 
-== Running a Simple Producer Application
+== シンプルなProducerアプリケーションの実行
 
-Let's run the simple streaming application that we analyzed in the previous sections.
+前のセクションで分析したシンプルなストリーミングアプリケーションを実行してみましょう。
 
-* In the Devspaces IDE, open a new terminal by clicking on the menu on the top left corner. Then select *Terminal > New Terminal.* to launch a new terminal window.
+* Devspaces IDEで、左上隅のメニューをクリックして新しいターミナルを開きます。次に*Terminal > New Terminal.*を選択して新しいターミナルウィンドウを起動します。
 +
 image::m2/devspaces-terminal.png[]
 
-* In the terminal window, run the following command to navigate to the project directory.
+* ターミナルウィンドウで、次のコマンドを実行してプロジェクトディレクトリに移動します。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
 cd module-kafka-api/
 ----
 
-NOTE: Hit *allow* if the browser prompts for permission to paste into the terminal.
+NOTE: ブラウザがターミナルへの貼り付けの許可を求めた場合は、*allow*をクリックしてください。
 
-* Log in to the *kafka-{user_name}* project using the following command.
+* 次のコマンドを使用して*kafka-{user_name}* projectにログインします。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
@@ -36,42 +36,42 @@ oc project kafka-{user_name}
 // java --version
 // ----
 
-*  For the sake of consistency across the workshop make sure you are using java 21 by running the following command.
+*  ワークショップ全体の一貫性のために、次のコマンドを実行してjava 21を使用していることを確認してください。
 +
 [source,sh,role="execute",subs=attributes+]
 ----
 sdk install java 21.0.2-tem && sdk use java 21.0.2-tem
 ----
 
-* Click on the paste button if prompted.
+* プロンプトが表示されたら、pasteボタンをクリックします。
 
 
-* Your terminal output should confirm that you are using java 21.
+* ターミナル出力でjava 21を使用していることを確認してください。
 
-* In the file explorer on the left side, expand the `module-kafka-api` folder and then expand the `src/main/resources` folder. Click on the `application.properties` file to open it.
+* 左側のfile explorerで、`module-kafka-api`フォルダを展開し、次に`src/main/resources`フォルダを展開します。`application.properties`ファイルをクリックして開きます。
 
-* Replace the bootstrap servers placeholder value(line 6) with the following value.
+* bootstrap serversのプレースホルダ値(6行目)を次の値に置き換えます。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
 kafka-kafka-bootstrap.kafka-{user_name}.svc.cluster.local:9092
 ----
 
-* Double check again to make sure that the bootstrap servers value and has your corresponding username
+* bootstrap serversの値に対応するユーザー名が含まれていることを再度確認してください
 +
 image::m2/app-properties-bootstrap.png[]
 
 
 
 
-* Now let's run the producer application. Run the following command. This should start building the application and running the interactive application when it's done.
+* それでは、producerアプリケーションを実行してみましょう。次のコマンドを実行します。これによりアプリケーションのビルドが開始され、完了するとインタラクティブアプリケーションが実行されます。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
 ./run.sh
 ----
 
-* You should see a prompt similar to the following.
+* 次のようなプロンプトが表示されるはずです。
 +
 [source,bash]
 ----
@@ -84,16 +84,16 @@ Main Menu:
 2. Run Consumer
 3. Exit
 
-Enter your choice: 
+Enter your choice:
 ----
 
-* Choose the *option* 1 by entering `1` and press enter.
+* `1`を入力して*オプション* 1を選択し、Enterキーを押します。
 
-* Keep pressing *enter* to accept the default values, which should trigger the producer sending the messages.
+* *Enter*キーを押し続けてデフォルト値を受け入れます。これによりproducerがメッセージを送信するトリガーになります。
 
-* You should see an error being thrown continuously in the terminal output. Press *ctrl+c* to stop the producer after observing the error.
+* ターミナル出力にエラーが継続的にスローされることを確認できます。エラーを確認した後、*ctrl+c*を押してproducerを停止します。
 
-* The error message should be similar to the following indicating that the topic `tutorial-topic` does not exist.
+* エラーメッセージは次のようになり、topic `tutorial-topic`が存在しないことを示しています。
 +
 [source,bash]
 ----
@@ -101,15 +101,15 @@ Error while fetching metadata with correlation id 57 : {tutorial-topic=UNKNOWN_T
 [kafka-producer-network-thread | producer-1] WARN org.apache.kafka.clients.NetworkClient - [Producer clientId=producer-1] Error while fetching metadata with correlation id 58 : {tutorial-topic=UNKNOWN_TOPIC_OR_PARTITION}
 ----
 
-* Press *ctrl+c* to stop the producer.
+* *ctrl+c*を押してproducerを停止します。
 
-* In our cluster *auto.create.topics.enable* property is set to `false`. This is a Kafka broker configuration setting that *controls whether new topics are created automatically* when a producer or consumer attempts to access a non-existent one
+* このclusterでは*auto.create.topics.enable*プロパティが`false`に設定されています。これは、producerまたはconsumerが存在しないtopicにアクセスしようとした時に、*新しいtopicが自動的に作成されるかどうかを制御する*Kafka brokerの設定です。
 
-* This might be useful setting as it prevents typos in producer or consumer code from creating junk topics. 
+* この設定は、producerまたはconsumerコードのタイプミスからジャンクtopicが作成されることを防ぐため、有用な設定です。
 
-* Type `clear` and press enter to clear the terminal output on the devspaces terminal.
+* devspacesターミナルで`clear`と入力してEnterキーを押し、ターミナル出力をクリアします。
 
-* Now let's create the topic. Run the following command.
+* それでは、topicを作成しましょう。次のコマンドを実行します。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
@@ -118,33 +118,33 @@ oc run -n kafka-{user_name} topic-create --rm --restart=Never --quiet --attach \
 bash -lc '/opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-kafka-bootstrap:9092 --create --topic tutorial-topic --partitions 3 --replication-factor 1'
 ----
 
-* After the topic is created, run the interactive application again.
+* topicが作成されたら、インタラクティブアプリケーションを再度実行します。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
 ./run.sh
 ----
 
-* Run the producer by by entering `1` and press enter .
+* `1`を入力してEnterキーを押し、producerを実行します。
 
-* The producer is configured to automatically send *10 messages* with keys and values. Each message is approximately *30 bytes*. 
+* producerは、keyとvalueを持つ*10個のメッセージ*を自動的に送信するように設定されています。各メッセージは約*30バイト*です。
 
-* First you should be prompted to enter the *batch size.* The default value for our application is set to *16384 bytes*. Press enter to accept the default value.
+* 最初に*バッチサイズ*を入力するように求められます。アプリケーションのデフォルト値は*16384バイト*に設定されています。Enterキーを押してデフォルト値を受け入れます。
 
 
 
-* The next option is *linger.ms.* The default value for our application is 0, which means that the producer will not wait for any messages to accumulate before sending them. Enter `30000` and press enter. Enter the below value and press enter.
+* 次のオプションは*linger.ms*です。アプリケーションのデフォルト値は0で、これはproducerがメッセージを送信する前にメッセージが蓄積されるのを待たないことを意味します。`30000`を入力してEnterキーを押します。以下の値を入力してEnterキーを押します。
 +
 [source,bash,role="execute",subs=attributes+]
 ----
 30000
 ----
 
-* This will make the producer wait for 30 seconds or until the batch is full before sending it. 
+* これにより、producerはバッチが満杯になるか30秒経過するまで待機してから送信するようになります。
 
-* You should see that none of the messages are sent immediately. Only after 30 seconds the messages are sent to the topic.
+* メッセージがすぐには送信されないことがわかります。30秒後にのみメッセージがtopicに送信されます。
 
-* Wait for the 30 seconds and then you will see that the messages will be sent after the 30 seconds have elapsed.
+* 30秒待つと、30秒が経過した後にメッセージが送信されることがわかります。
 +
 [source,bash]
 ----
@@ -176,25 +176,25 @@ Partition 2:
 Total batches across all partitions: 3
 ----
 
-* Since we have a huge batch size compared to the messages that are being sent, the producer will wait for linger.ms to elapse before sending the batch. 
+* 送信されるメッセージと比較してバッチサイズが非常に大きいため、producerはバッチを送信する前にlinger.msが経過するのを待ちます。
 
-* Next, press *enter* to go back to the main menu
+* 次に、*Enter*キーを押してメインメニューに戻ります
 
-* Press `1` and hit *enter* again to run the producer again.
+* `1`を押して再度*Enter*キーを押し、producerを再度実行します。
 
-* Accept the *default values* for batch size(16 KB) and linger.ms (0) seconds. Before you press enter, take a guess on what will happen and observe the output.
+* バッチサイズ(16 KB)とlinger.ms(0)秒の*デフォルト値*を受け入れます。Enterキーを押す前に、何が起こるかを推測し、出力を観察してください。
 
-* Now hit enter. You should observe that the messages *are sent immediately without any wait*. This is because the linger.ms has been set to 0 seconds. The producer will not wait for any messages to accumulate before sending them.
+* それではEnterキーを押してください。メッセージが*待ち時間なしで即座に送信される*ことを確認できます。これは、linger.msが0秒に設定されているためです。producerはメッセージを送信する前にメッセージが蓄積されるのを待ちません。
 
-* Hit enter and 
+* Enterキーを押して
 
-* Type `3` and hit enter again to exit the application.
+* `3`を入力して再度Enterキーを押し、アプリケーションを終了します。
 
-=== Summary
-This section hopefully helped you get a high level understanding of the producer api and see a couple of producer configurations in action. 
+=== まとめ
+このセクションが、producer APIの高レベルの理解を得て、いくつかのproducer設定が実際に動作することを確認するのに役立ったことを願います。
 
-=== Up Next
-In the next section, we will first learn about the consumer configuration and then see the consumer in action.
+=== 次のステップ
+次のセクションでは、まずconsumer設定について学び、その後consumerが実際に動作することを確認します。
 
 
 

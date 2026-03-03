@@ -1,9 +1,9 @@
 :imagesdir: ../../assets/images
 include::../style.adoc[]
 
-== Summary of this workshop
-Thank you for completing the Streams for Apache Kafka Workshop! In this workshop, you have learned the fundamentals of event streaming using Apache Kafka and related technologies. You have explored various concepts, tools, and techniques to build event-driven applications that can process and analyze data in real-time. 
+== このワークショップのまとめ
+Streams for Apache Kafka ワークショップを完了していただき、ありがとうございます！このワークショップでは、Apache Kafkaと関連技術を使用したEvent Streamingの基礎を学びました。リアルタイムでデータを処理・分析できるイベント駆動型アプリケーションを構築するための、さまざまな概念、ツール、テクニックを探求しました。
 
 
-We hope this workshop has provided you with a solid foundation to further explore and implement event streaming solutions in your own projects. For more information and resources, please refer to the following link:https://developers.redhat.com/products/streams-for-apache-kafka/overview[Streams for Apache Kafka on Red Hat Developers, window=_blank]
+このワークショップが、ご自身のプロジェクトでEvent Streamingソリューションをさらに探求し、実装するための確固たる基礎を提供できたことを願っています。詳細情報とリソースについては、以下を参照してください: link:https://developers.redhat.com/products/streams-for-apache-kafka/overview[Streams for Apache Kafka on Red Hat Developers, window=_blank]
 

@@ -1,21 +1,21 @@
 :imagesdir: ../../assets/images
 include::../style.adoc[]
 
-== Module 3: 
+== Module 3:
 {m3}
 
-=== Stream Processing with {streams}
+=== {streams}によるStream Processing
 
-As Kafka based applications become more complex, they need do more than just sending and receiving messages. Often, applications need to analyze, aggregate, or react to that data in real time rather than simply forwarding it elsewhere. That’s where Stream Processing with Kafka Streams comes in.
+Kafkaベースのアプリケーションが複雑化するにつれて、単にメッセージを送受信するだけでなく、より多くのことを行う必要が出てきます。多くの場合、アプリケーションは単にデータを他の場所に転送するのではなく、リアルタイムでデータを分析、集約、または反応する必要があります。そこで登場するのが、Kafka StreamsによるStream Processingです。
 
-Kafka Streams is a lightweight, client-side library for building real-time data processing and event-driven applications on top of Apache Kafka.
+Kafka Streamsは、Apache Kafka上でリアルタイムのデータ処理とイベント駆動型アプリケーションを構築するための、軽量なクライアント側ライブラリです。
 
-Instead of moving data into an external processing cluster, your application itself becomes the stream processor — reading from Kafka topics, performing transformations, mapping, filtering,joining or aggregations, and writing results back to Kafka or to local state stores.
+データを外部の処理クラスタに移動するのではなく、アプリケーション自体がstream processorになります。Kafka topicから読み取り、変換、マッピング、フィルタリング、結合、集約を実行し、結果をKafkaまたはローカルのstate storesに書き戻します。
 
 image::m3/kafka-streams-architecture.png[]
 
-=== Activity Overview
-In this module, you will explore a real-world streaming application that uses the Kafka Streams API to process user activity data from an e-commerce web application.
+=== アクティビティ概要
+このモジュールでは、Kafka Streams APIを使用してeコマースWebアプリケーションからのユーザーアクティビティデータを処理する、実世界のストリーミングアプリケーションを探索します。
 
-Let's analyze the how Globex webs application uses the Kafka Streams API to build a list of the most popular products on the web site, based on the user activity you generate by liking products on the web site in the earlier module.
+Globex Webアプリケーションが、前のモジュールでWebサイト上の製品に「いいね」をすることで生成したユーザーアクティビティに基づいて、Kafka Streams APIを使用してWebサイト上で最も人気のある製品のリストを構築する方法を分析しましょう。
 

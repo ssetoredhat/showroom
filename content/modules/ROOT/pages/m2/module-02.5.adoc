@@ -3,11 +3,11 @@ include::../style.adoc[]
 :check: ✓
 :cross: ×
 
-== Real-World Kafka Application in Action: E-Commerce Activity Tracking
+== 実際のKafkaアプリケーション: Eコマース活動トラッキング
 
-In this section, we will explore an e-commerce application to demonstrate real-time data streaming and processing use cases. The Globex web application used in this workshop is a demo app and as such does not pretend to be a real-life retail application, but it packs enough functionality to make it feel like a real retail web app.
+このセクションでは、リアルタイムデータストリーミングと処理のユースケースを示すためにeコマースアプリケーションを探索します。このワークショップで使用されるGlobex webアプリケーションはデモアプリであり、実際の小売アプリケーションであるとは主張しませんが、実際の小売webアプリのように感じさせるのに十分な機能を備えています。
 
-* From your browser, navigate to link:{openshift_cluster_console}/topology/ns/*globex-{user_name}*?view=graph[OpenShift Cluster Console, window="_console"]. Login with your username and password (`{user_name}`/`{password}`).
+* ブラウザから、link:{openshift_cluster_console}/topology/ns/*globex-{user_name}*?view=graph[OpenShift Cluster Console, window="_console"]に移動します。ユーザー名とパスワード(`{user_name}`/`{password}`)でログインします。
 
 
 // * You should be redirected to a view which lists the different OpenShift _projects_ (also known as _namespaces_) you have access to.
@@ -22,80 +22,80 @@ In this section, we will explore an e-commerce application to demonstrate real-t
 
 
 
-* The Globex web application is deployed in the *globex-{user_name}* namespace. You should see the  topology view of the namespace. The Topology view gives you a graphical representation of the different resources deployed in the namespace.
+* Globex webアプリケーションは*globex-{user_name}* namespaceにデプロイされています。namespaceのtopologyビューが表示されるはずです。Topologyビューは、namespaceにデプロイされたさまざまなリソースのグラフィカルな表現を提供します。
 +
 image::m2/openshift-console-globex-namespace.png[]
 
 
-* In the *Topology View* , expect to see something like this in the *globex-{user_name}* namespace:
+* *Topology View*では、*globex-{user_name}* namespaceに次のようなものが表示されます:
 +
 image::m2/openshift-console-topology-view.png[]
 +
-The Globex web-app deployment consists of:
+Globex web-appデプロイメントは以下で構成されています:
 +
 [cols="28m,~"]
 [frame=all, grid=all]
 |===
-|*Service* | *Description*
+|*Service* | *説明*
 
 | globex-web
-| The web front-end of the *Globex web application*, running on Node.js with an Angular UI.
+| *Globex webアプリケーション*のwebフロントエンド。Node.jsとAngular UIで実行されています。
 
 | globex-store-app
-| The backend application of the *Globex retail app*, written in Quarkus, provides catalog, inventory, cart and order services.
+| *Globex retailアプリ*のバックエンドアプリケーション。Quarkusで書かれており、catalog、inventory、cart、orderサービスを提供します。
 
 | globex-db
-| The PostgreSQL database used by the *globex-store-app application*, stores the catalog, inventory, customer and order information.
+| *globex-store-appアプリケーション*が使用するPostgreSQLデータベース。catalog、inventory、customer、order情報を保存します。
 
-| activity-tracking 
-| This microservice has a REST endpoint for user activity events generated from the UI. These events are send to a Kafka topic.
+| activity-tracking
+| このmicroserviceには、UIから生成されるユーザーアクティビティイベント用のRESTエンドポイントがあります。これらのイベントはKafka topicに送信されます。
 
-| recommendation-engine (We will explore this service in more detail in a later module.)
-| An example of an application which does real-time processing of an event stream* This application uses Kafka Streams, an event-streaming library, to process the stream of events produced by the activity tracking service to build a list of the most popular products on the web site* This list is exposed as a REST endpoint, and called by the front-end to display featured products.
+| recommendation-engine (このサービスは後のモジュールで詳しく探索します。)
+| イベントstreamのリアルタイム処理を行うアプリケーションの例* このアプリケーションはKafka Streams(イベントストリーミングlibrary)を使用して、activity trackingサービスによって生成されたイベントのstreamを処理し、webサイトで最も人気のある製品のリストを構築します* このリストはRESTエンドポイントとして公開され、フロントエンドによって呼び出されて注目の製品を表示します。
 
 |===
 
-* To open the Globex web application, click on the image:m2/openshift-console-open-url.png[] symbol next to the *globex-web* deployment in the topology view.
+* Globex webアプリケーションを開くには、topologyビューの*globex-web*デプロイメントの横にあるimage:m2/openshift-console-open-url.png[]シンボルをクリックします。
 +
 image::m2/openshift-console-open-url-2.png[]
 +
-This opens a new browser tab pointing to the home page of the Globex Web application. Alternatively, open a new browser tab and navigate to link:{globex_web_url}[Globex-Web, window="_globex"].
+これにより、Globex Webアプリケーションのホームページを指す新しいブラウザタブが開きます。または、新しいブラウザタブを開いてlink:{globex_web_url}[Globex-Web, window="_globex"]に移動します。
 
 
-== Generate user _like_ activity
+== ユーザーの_いいね_アクティビティを生成する
 
 
-* On the Globex web site, click on the *Cool Stuff Store* link on the top menu. From here you can browse through the product catalog, open product detail pages and add items to the shopping cart.
+* Globex webサイトで、トップメニューの*Cool Stuff Store*リンクをクリックします。ここから、製品catalogを閲覧したり、製品詳細ページを開いたり、ショッピングカートにアイテムを追加したりできます。
 +
 image::m2/globex-view-catalog.png[]
 +
-NOTE: The product catalog might take a few seconds to load the first time.
+NOTE: 製品catalogの読み込みに初回は数秒かかる場合があります。
 
-* To generate user activity events, click on the image:m2/globex-product-like.png[] symbol next to a product. You can repeat this for 3-4 products.
+* ユーザーアクティビティイベントを生成するには、製品の横にあるimage:m2/globex-product-like.png[]シンボルをクリックします。これを3〜4つの製品に対して繰り返すことができます。
 
-* Every _like_ action generates a user activity event that is captured by the _activity tracking_ service and sent to a Kafka topic. 
+* すべての_いいね_アクションは、_activity tracking_サービスによってキャプチャされ、Kafka topicに送信されるユーザーアクティビティイベントを生成します。
 
-* The Kafka broker is installed in the *kafka-{user_name}* namespace. In the same namespace, streams for Apache Kafka console, a web UI for viewing Kafka topics and browsing consumer groups, is also installed.
+* Kafka brokerは*kafka-{user_name}* namespaceにインストールされています。同じnamespaceに、Kafka topicを表示してconsumer groupを閲覧するためのweb UIであるstreams for Apache Kafka consoleもインストールされています。
 
-* Click to navigate to link:https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}[streams for Apache Kafka console, window="_amqstreams"]. This redirects you to the streams for Apache Kafka console login page. For the purpose of this workshop, choose *Click to login anonymously* to access the console
+* クリックしてlink:https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}[streams for Apache Kafka console, window="_amqstreams"]に移動します。これにより、streams for Apache Kafka consoleログインページにリダイレクトされます。このワークショップの目的では、*Click to login anonymously*を選択してconsoleにアクセスします
 
-* Choose the *Topics* menu on the left-hand side to see the list of topics.
+* 左側の*Topics*メニューを選択して、topicのリストを表示します。
 +
 image::m2/globex-tracking-topic-console.png[]
 
-* One of those topics is called *globex.tracking*, which is the topic that contains the user activity events. Click on the topic name to see the details of the topic. If you liked some products on the web site, the topic should contain some messages.
+* それらのtopicの1つは*globex.tracking*と呼ばれ、ユーザーアクティビティイベントを含むtopicです。topic名をクリックして、topicの詳細を確認します。webサイトでいくつかの製品を「いいね」した場合、topicにはいくつかのメッセージが含まれているはずです。
 +
 image::m2/amqstreams-globex-tracking.png[]
 
-* Click on any of the messages listed to see its content. In this case, the body of each message consists of a JSON structure of a user activity event from the Globex web application.
+* リストされているメッセージのいずれかをクリックして、その内容を確認します。この場合、各メッセージの本文は、Globex webアプリケーションからのユーザーアクティビティイベントのJSON構造で構成されています。
 +
 image::m2/amqstreams-expand-message.png[]
 
-* The activity tracking service is the producer of these events. All the events, such as likes, are sent to the *globex.tracking* topic in real-time using the Kafka Producer API.
+* activity trackingサービスは、これらのイベントのproducerです。いいねなどのすべてのイベントは、Kafka Producer APIを使用してリアルタイムで*globex.tracking* topicに送信されます。
 
 
-This is a simple real world practical example of a Kafka producer application that sends events to a Kafka topic. Both the activity tracking and recommendation engine services(which we will explore in the stream processing module) are implemented using Quarkus, a Java framework for building cloud-native applications,  which simplifies the interaction with Kafka, as compared to using the Kafka Producer API directly.
+これは、Kafka topicにイベントを送信するKafka producerアプリケーションのシンプルな実世界の実用例です。activity trackingとrecommendation engineサービス(stream processingモジュールで探索します)の両方は、cloud-nativeアプリケーションを構築するためのJavaフレームワークであるQuarkusを使用して実装されており、Kafka Producer APIを直接使用する場合と比較して、Kafkaとの対話を簡素化します。
 
-=== Up Next
-Let's briefly explore how Quarkus simplifies the interaction with Kafka. 
+=== 次のステップ
+QuarkusがKafkaとの対話をどのように簡素化するかを簡単に探索しましょう。 
 

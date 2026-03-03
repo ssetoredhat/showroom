@@ -4,85 +4,85 @@ include::../style.adoc[]
 :cross: ×
 
 == Kafka Consumer API
-The Kafka consumer API allows developers to write kafka consumers within their applications to read records from Kafka topics. The API provides various configuration options to control the behavior of the consumer, such as offset management, polling, and group coordination.
+Kafka Consumer APIは、開発者がアプリケーション内でKafka consumerを作成し、Kafka topicからrecordを読み取ることができるようにします。このAPIは、offset管理、polling、group coordinationなど、consumerの動作を制御するさまざまな設定オプションを提供します。
 
-We'll be looking at a simple Java application that uses the Kafka Consumer API to read messages from a Kafka topic. 
+ここでは、Kafka Consumer APIを使用してKafka topicからメッセージを読み取るシンプルなJavaアプリケーションを見ていきます。
 
-=== A Simple Consumer Application
+=== シンプルなConsumerアプリケーション
 
-. Let's us now look at the consumer code. In the `module-kafka-api` folder, click on the *src/main/java/com/kafka/tutorial/SimpleKafkaConsumer.java* file in the file explorer to open it.
+. それでは、consumerコードを見てみましょう。`module-kafka-api`フォルダで、file explorerの*src/main/java/com/kafka/tutorial/SimpleKafkaConsumer.java*ファイルをクリックして開きます。
 +
 image::m2/module-kafka-api-consumer.png[]
 
-This section breaks down the code and explain hows a **Kafka consumer** is configured and how it works under the hood.
+このセクションでは、コードを分解し、**Kafka consumer**がどのように設定され、内部でどのように機能するかを説明します。
 
-In this example:
+この例では:
 
-* The consumer connects to a Kafka cluster.
-* It reads messages with string keys and values and changes its behavior based on configuration options provided as user inputs. 
-* It automatically commits offsets to ensure reliability and message delivery semantics
-* It safely closes when done
+* consumerがKafka clusterに接続します。
+* 文字列のkeyとvalueを持つメッセージを読み取り、ユーザー入力として提供される設定オプションに基づいて動作を変更します。
+* 信頼性とメッセージ配信セマンティクスを確保するために自動的にoffsetをコミットします
+* 完了時に安全にcloseします
 
-=== Consumer Configuration
+=== Consumer設定
 
-* The configuration is defined using `Consumer Properties` defined in the *lines 47-82* of the code.
+* 設定はコードの*47-82行目*で定義された`Consumer Properties`を使用して定義されます。
 
-This reference organizes consumer configuration options by concern (offsets, coordination, polling, etc.).  
-The **Used in example?** column shows whether the option appears in the code.
+このリファレンスは、関心事(offset、coordination、pollingなど)ごとにconsumer設定オプションを整理しています。
+**Used in example?**列は、そのオプションがコードに含まれているかどうかを示します。
 
 [IMPORTANT]
 ====
-The rest of this section deals with explaining the various configuration options available for Kafka consumers and some of their usages in the code. If you are already familiar with these options or want to directly jump to running the code, feel free to **skip to this section and move on to the link:module-02.4.html[next section]** to run the consumer application.
+このセクションの残りの部分では、Kafka consumerで使用可能なさまざまな設定オプションと、コードでのそれらの使用方法について説明します。これらのオプションに既に精通している場合、またはコードの実行に直接進みたい場合は、**このセクションをスキップしてlink:module-02.4.html[次のセクション]**に進み、consumerアプリケーションを実行してください。
 ====
 
-=== Basic Core Settings
-_Configure how the consumer discovers and communicates with the Kafka cluster._
+=== 基本コア設定
+_consumerがKafka clusterを検出して通信する方法を設定します。_
 
 |===
-| Option | What it controls | Typical values | Notes | Used in example?
+| Option | 制御する内容 | 一般的な値 | 注記 | 例で使用?
 
 | `bootstrap.servers`
-| How the client finds the kafka cluster
-| `HOST:PORT` (comma-separated)
-| Must be reachable; used to discover topics and partitions.
+| clientがKafka clusterを見つける方法
+| `HOST:PORT` (カンマ区切り)
+| 到達可能である必要があります; topicとpartitionを検出するために使用されます。
 | {check} line 47
 
 | `group.id`
-| Consumer group identity
-| free string
-| All consumers with same group share partitions cooperatively.
+| Consumer group識別子
+| 自由な文字列
+| 同じgroupを持つすべてのconsumerはpartitionを協調的に共有します。
 | {check} line 52
 |===
 
 === Deserialization
-_Define how message keys and values are turned from bytes into objects._
+_メッセージのkeyとvalueがバイトからオブジェクトに変換される方法を定義します。_
 
 |===
-| Option | What it controls | Typical values | Notes | Used in example?
+| Option | 制御する内容 | 一般的な値 | 注記 | 例で使用?
 
 | `key.deserializer`
-| Converts key bytes to objects
-| `StringDeserializer`, `ByteArrayDeserializer`, Avro/Protobuf for advanced data
-| Must match producer’s serializer and topic schema.
+| keyバイトをオブジェクトに変換
+| `StringDeserializer`, `ByteArrayDeserializer`, 高度なデータ用のAvro/Protobuf
+| producerのserializerとtopic schemaに一致する必要があります。
 | {check} line 56
 
 | `value.deserializer`
-| Converts value bytes to objects
-| Same as above
-| Must match producer’s serializer and topic schema.
+| valueバイトをオブジェクトに変換
+| 上記と同じ
+| producerのserializerとtopic schemaに一致する必要があります。
 | {check} line 57
 |===
 
-=== Consumer Group & Coordination
-_Control how instances coordinate, balance partitions, and scale._
+=== Consumer GroupとCoordination
+_インスタンスがどのように協調し、partitionをバランスし、スケールするかを制御します。_
 
 |===
-| Option | What it controls | Typical values | Notes | Used in example?
+| Option | 制御する内容 | 一般的な値 | 注記 | 例で使用?
 
 | `group.id`
-| Consumer group identity
-| free string
-| All consumers with same group share partitions cooperatively.
+| Consumer group識別子
+| 自由な文字列
+| 同じgroupを持つすべてのconsumerはpartitionを協調的に共有します。
 | {check} line 52
 
 |===
@@ -90,89 +90,89 @@ _Control how instances coordinate, balance partitions, and scale._
 
 [NOTE]
 ====
-.Click to learn about other Consumer Group & Coordination options
+.クリックして他のConsumer GroupとCoordinationオプションについて学ぶ
 [%collapsible]
 =====
 
 |===
-| Option | What it controls | Typical values | Notes | Used in example?
+| Option | 制御する内容 | 一般的な値 | 注記 | 例で使用?
 
 | `partition.assignment.strategy`
-| How partitions are assigned
+| partitionが割り当てられる方法
 | `range`, `roundrobin`, , `sticky`, `cooperative-sticky`
-| Implementing the `org.apache.kafka.clients.consumer.ConsumerPartitionAssignor` interface allows you to plug in a custom assignment strategy..
+| `org.apache.kafka.clients.consumer.ConsumerPartitionAssignor`インターフェースを実装することで、カスタム割り当て戦略をプラグインできます。
 | {cross}
 
 | `session.timeout.ms`
-| Client Failure detection
-| Default `45000`
-| If no heartbeat in time, coordinator triggers rebalance.
+| Client障害検出
+| デフォルト`45000`
+| 時間内にheartbeatがない場合、coordinatorがrebalanceをトリガーします。
 | {cross}
 |===
 =====
 ====
 
 
-=== Offsets & Delivery Semantics
-_Control how offsets are stored, committed, and reset to ensure correct processing._
+=== Offsetと配信セマンティクス
+_正確な処理を確保するために、offsetがどのように保存、コミット、リセットされるかを制御します。_
 
 |===
-| Option | What it controls | Typical values | Notes | Used in example?
+| Option | 制御する内容 | 一般的な値 | 注記 | 例で使用?
 
 | `auto.offset.reset`
-| Where to start if no committed offset exists for a consumer or consumer group
+| consumerまたはconsumer groupにコミットされたoffsetが存在しない場合の開始位置
 | `earliest`, `latest`, `none`
-| `earliest` = start from beginning; `latest` = only new data.
+| `earliest` = 最初から開始; `latest` = 新しいデータのみ。
 | {check} line 63
 
 | `enable.auto.commit`
-| Automatic offset commits
+| 自動offset commit
 | `true` / `false`
-| If true the consumer's offset will be periodically committed in the background.
+| trueの場合、consumerのoffsetがバックグラウンドで定期的にコミットされます。
 | {check} line 68
 |===
 
 [NOTE]
 ====
-.Click to learn about other offset and delivery semantics options
+.クリックして他のoffsetと配信セマンティクスオプションについて学ぶ
 [%collapsible]
 =====
 
 |===
-| Option | What it controls | Typical values | Notes | Used in example?
+| Option | 制御する内容 | 一般的な値 | 注記 | 例で使用?
 
 
 | `auto.commit.interval.ms`
-| Period in milliseconds that the consumer offsets are auto-committed
-| e.g., `5000`
-| Effective only when `enable.auto.commit=true`.
+| consumer offsetが自動コミットされる期間(ミリ秒)
+| 例: `5000`
+| `enable.auto.commit=true`の場合のみ有効です。
 | {cross}
 |===
 =====
 ====
 
-=== Polling & Throughput
-_Tune how much data each poll fetches and how often the app must process it._
+=== PollingとThroughput
+_各pollがフェッチするデータ量とアプリがそれを処理する頻度を調整します。_
 
 |===
-| Option | What it controls | Typical values | Notes | Used in example?
+| Option | 制御する内容 | 一般的な値 | 注記 | 例で使用?
 
 | `fetch.min.bytes`
-| Minimum bytes the broker should return
+| brokerが返すべき最小バイト数
 | int
-| Higher → better batching, added latency.
+| 高い値 → より良いbatching、レイテンシの増加。
 | {check} line 75
 
 | `fetch.max.wait.ms`
-| Max wait time for `fetch.min.bytes`
-| e.g., `500`
-| Broker will wait up to this long to accumulate bytes.
+| `fetch.min.bytes`の最大待機時間
+| 例: `500`
+| brokerはバイトを蓄積するためにこの時間まで待機します。
 | {check} line 82
 
-| `Application poll interval (not a config)`
-| Loop cadence and responsiveness
+| `Application poll interval (設定ではない)`
+| ループのケイデンスと応答性
 | `consumer.poll(Duration.ofMillis(...))`
-| Smaller duration → more responsive, more CPU wakeups.
+| 小さい期間 → より応答性が高い、より多くのCPUウェイクアップ。
 | {check} line 115
 
 |===
@@ -180,30 +180,30 @@ _Tune how much data each poll fetches and how often the app must process it._
 
 [NOTE]
 ====
-.Click to learn about other polling and throughput options
+.クリックして他のpollingとthroughputオプションについて学ぶ
 [%collapsible]
 =====
 
 |===
-| Option | What it controls | Typical values | Notes | Used in example?
+| Option | 制御する内容 | 一般的な値 | 注記 | 例で使用?
 
 | `max.poll.interval.ms`
-| Max allowed processing time between polls
-| default `300000` (5 min)
-| If exceeded, consumer is considered dead → rebalance occurs.
+| poll間の最大許容処理時間
+| デフォルト`300000` (5分)
+| これを超えると、consumerは死んでいると見なされ、rebalanceが発生します。
 | {cross}
 
 | `max.poll.records`
-| Max records returned per poll
-| e.g., `500`, `1000`
-| Does not impact the underlying fetching behavior
+| pollごとに返される最大record数
+| 例: `500`, `1000`
+| 基礎となるフェッチ動作には影響しません
 | {cross}
 
 
 | `fetch.max.bytes`
-| Max bytes per fetch request
-| Default `52428800` (50 MiB)
-| Upper bound on response size; may need to increase for large messages.
+| フェッチリクエストごとの最大バイト数
+| デフォルト`52428800` (50 MiB)
+| レスポンスサイズの上限; 大きなメッセージの場合は増やす必要があるかもしれません。
 | {cross}
 
 |===
@@ -211,62 +211,62 @@ _Tune how much data each poll fetches and how often the app must process it._
 ====
 
 
-=== Timeouts & Backoff
-_Define network timeouts and retry pacing for stable consumption._
+=== タイムアウトとBackoff
+_安定したconsumptionのためのネットワークタイムアウトとretryペースを定義します。_
 
 [NOTE]
 ====
-.Click to learn about Timeouts & Backoff options
+.クリックしてタイムアウトとBackoffオプションについて学ぶ
 [%collapsible]
 =====
 |===
-| Option | What it controls | Typical values | Notes | Used in example?
+| Option | 制御する内容 | 一般的な値 | 注記 | 例で使用?
 
 | `request.timeout.ms`
-| Broker request timeout
-| Default `30000`
+| Brokerリクエストタイムアウト
+| デフォルト`30000`
 | -
 | {cross}
 
 | `retry.backoff.ms`
-| Delay between retries
-| Default `100`
-| Avoids retry loops on transient issues.
+| retry間の遅延
+| デフォルト`100`
+| 一時的な問題でのretryループを回避します。
 | {cross}
 
 | `metadata.max.age.ms`
-| Metadata refresh interval
-| Default `300000`
-| Helps to proactively discover new brokers or partitions.
+| Metadataリフレッシュ間隔
+| デフォルト`300000`
+| 新しいbrokerまたはpartitionを積極的に検出するのに役立ちます。
 | {cross}
 |===
 =====
 ====
 
-=== Client Identity & Telemetry
-_Add traceability and hooks for monitoring and custom logic._
+=== Client IdentityとTelemetry
+_モニタリングとカスタムロジックのためのトレーサビリティとフックを追加します。_
 
 [NOTE]
 ====
-.Click to learn about Client Identity & Telemetry options
+.クリックしてClient IdentityとTelemetryオプションについて学ぶ
 [%collapsible]
 =====
 |===
-| Option | What it controls | Typical values | Notes | Used in example?
+| Option | 制御する内容 | 一般的な値 | 注記 | 例で使用?
 
 | `client.id`
-| Logical app identifier
-| free string
-| Useful for metrics/log tracing; not specified in example.
+| 論理的なアプリケーション識別子
+| 自由な文字列
+| メトリクス/ログトレースに有用です; 例では指定されていません。
 | {cross}
 |===
 
 =====
 ====
 
-=== Consumer Creation (line 90)
+=== Consumer作成 (line 90)
 
-This part of the code initializes a consumer with the provided configuration, establishing connections to the brokers and the group coordinator.
+コードのこの部分は、提供された設定でconsumerを初期化し、brokerとgroup coordinatorへの接続を確立します。
 +
 [source,java]
 ----
@@ -276,48 +276,48 @@ this.consumer = new KafkaConsumer<>(props);
 
 === Consumer Subscription (line 93)
 
-This part of the code configures the consumer to subscribe to one or more topics.
+コードのこの部分は、consumerが1つ以上のtopicをsubscribeするように設定します。
 [source,java]
 ----
 consumer.subscribe(Collections.singletonList(topic));
 ----
 
 === Consumer Polling (line 115)
-`consumer.poll(Duration.ofMillis(...))` is the core of the Kafka consumer API. It fetches available records from the broker and must be called regularly to:
+`consumer.poll(Duration.ofMillis(...))`はKafka Consumer APIのコアです。brokerから利用可能なrecordをフェッチし、以下のために定期的に呼び出される必要があります。
 
-. retrieve messages, and  
-. send heartbeats to the group coordinator to prevent rebalances.
+. メッセージを取得し、
+. group coordinatorにheartbeatを送信してrebalanceを防ぎます。
 
-=== Record Iteration (line 115)
-Each `ConsumerRecord` includes key metadata:
-`timestamp`, `partition`, `offset`, `key`, and `value`.  
+=== Record反復処理 (line 115)
+各`ConsumerRecord`には重要なmetadataが含まれています:
+`timestamp`, `partition`, `offset`, `key`, `value`
 
-These fields are critical for tracking processing order and message provenance.
-
-
-**Why It Matters: **
-Gracefully closing the consumer prevents:
-- Rebalance storms caused by sudden disconnects.  
-- Message reprocessing from uncommitted offsets.  
-- Thread leaks or dangling connections.
+これらのフィールドは、処理順序とメッセージの起源を追跡するために重要です。
 
 
-=== How This Consumer Works (Recap)
-_Step-by-step flow from subscribe to processing with offset behavior._
+**重要な理由:**
+consumerを適切にcloseすることで以下を防ぎます:
+- 突然の切断によるrebalanceストーム。
+- コミットされていないoffsetからのメッセージ再処理。
+- スレッドリークやぶら下がり接続。
 
-. Build `Properties` with deserializers, group id, `auto.offset.reset=earliest`, `enable.auto.commit=true`.
-. Create `KafkaConsumer` and `subscribe([topic])`.
-. Enter loop: `poll(1000 ms)` to fetch available records.
-. For each `ConsumerRecord`, read metadata (`timestamp`, `partition`, `offset`, `key`, `value`).
-. With `enable.auto.commit=true`, offsets are committed periodically in the background.
-. On shutdown, stop loop and let thread join to exit cleanly.
 
-=== In Summary
-This demonstrates the minimal pattern every Kafka consumer follows:
+=== このConsumerの動作方法(要約)
+_subscribeから処理までのoffset動作を含むステップバイステップのフロー。_
+
+. deserializer、group id、`auto.offset.reset=earliest`、`enable.auto.commit=true`で`Properties`を構築します。
+. `KafkaConsumer`を作成し、`subscribe([topic])`します。
+. ループに入る: 利用可能なrecordをフェッチするために`poll(1000 ms)`します。
+. 各`ConsumerRecord`について、metadata(`timestamp`, `partition`, `offset`, `key`, `value`)を読み取ります。
+. `enable.auto.commit=true`の場合、offsetはバックグラウンドで定期的にコミットされます。
+. シャットダウン時に、ループを停止し、スレッドをjoinさせてクリーンに終了します。
+
+=== まとめ
+これは、すべてのKafka consumerが従う最小限のパターンを示しています:
 
 
 **subscribe → poll → process → (commit offsets)**
 
 
-=== Up Next
-Now that we have analyzed the Consumer APIs and the related code, let's run our simple application to the see the consumer in action.
+=== 次のステップ
+Consumer APIと関連コードを分析したので、シンプルなアプリケーションを実行してconsumerが実際に動作することを確認しましょう。

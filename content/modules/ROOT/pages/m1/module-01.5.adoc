@@ -2,10 +2,10 @@
 include::../style.adoc[]
 
 
-== Kafka Basics - Partitioning and Keys
-As we learned earlier, With a key, the records/messages with the same key go to the same partition. Let's see this in action.
+== Kafka基礎 - PartitioningとKeys
+前に学習したように、keyを使用すると、同じkeyを持つレコード/メッセージは同じpartitionに送られます。実際に動作を見てみましょう。
 
-* In the *upper terminal* run a new producer that will send a bunch of messages with key-value pair . This will ensure messages with the same key go to the same topic partition.
+* *上部のターミナル*で、key-valueペアの複数のメッセージを送信する新しいproducerを実行します。これにより、同じkeyを持つメッセージが同じtopic partitionに送られることが保証されます。
 +
 [source,sh,role="execute",subs=attributes+]
 ----
@@ -17,24 +17,24 @@ i=1; while true; do echo "k$((i%10)):msg-$i"; i=$((i+1)); sleep 0.3; done | \
   --property key.separator=:
 ----
 
-* Wait for *10 seconds* after the producer starts to allow some messages to be produced. The messages produced will be in the format `key:value` such as `k1:msg-1`, `k2:msg-2` etc
+* producerが開始してから*10秒間*待って、いくつかのメッセージが生成されるようにします。生成されるメッセージは`k1:msg-1`、`k2:msg-2`などの`key:value`形式になります。
 
-NOTE: You will not see any output in the terminal since the console producer does not print any confirmation messages when messages are produced successfully. Just wait for 10 seconds before proceeding to the next step.
+NOTE: console producerはメッセージが正常に生成された際に確認メッセージを出力しないため、ターミナルには何も表示されません。次のステップに進む前に10秒待ってください。
 
-* Now stop the producer by hitting (Ctrl+C).
+* (Ctrl+C)を押してproducerを停止します。
 
-* Navigate to the https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka[streams console, window="_amqstreams"] > topics > demo and verify the messages being produced to the topic `demo`. You should see messages with keys `k0` to `k9` being produced to the topic.
+* https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka[streams console, window="_amqstreams"] > topics > demoに移動して、topic `demo`に生成されたメッセージを確認します。`k0`から`k9`までのkeyを持つメッセージがtopicに生成されているはずです。
 +
 image::m1/console_key_messages_pairs.png[]
 
-* From the messages tab, filter the messages with key `k1`. You can do this by deleting the existing text in the search box and typing `k1` and hitting enter. You should see that all the messages with key `k1` are in the same partition.
+* messagesタブから、key `k1`でメッセージをフィルタリングします。検索ボックス内の既存のテキストを削除して`k1`と入力し、Enterを押します。key `k1`を持つすべてのメッセージが同じpartitionにあることを確認できます。
 +
 image::m1/console_keys_messages.png[]
 
-* Try the same with the other keys such as `k2`, `k3` etc., and observe that all messages with the same key go to the same partition.
+* `k2`、`k3`などの他のkeyでも同じことを試してみて、同じkeyを持つすべてのメッセージが同じpartitionに送られることを確認してください。
 
-Kafka uses a partitioner to determine which partition a message goes to based on the key. By default, Kafka uses a hash function on the key to determine the partition the message goes to. This ensures that messages with the same key always go to the same partition, which is important for maintaining order for the messages with the same key.
+Kafkaはpartitionerを使用して、keyに基づいてメッセージがどのpartitionに送られるかを決定します。デフォルトでは、Kafkaはkeyに対してハッシュ関数を使用して、メッセージが送られるpartitionを決定します。これにより、同じkeyを持つメッセージは常に同じpartitionに送られ、同じkeyを持つメッセージの順序を維持するために重要です。
 
-=== Up Next
-This is a simple example of how Kafka partitions messages based on keys. In the next section, we will learn about consumer groups and rebalancing.
+=== 次のステップ
+これは、Kafkaがkeyに基づいてメッセージをpartitionする簡単な例です。次のセクションでは、consumer groupとrebalancingについて学習します。
 

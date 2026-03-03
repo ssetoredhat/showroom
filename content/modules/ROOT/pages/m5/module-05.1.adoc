@@ -2,10 +2,10 @@
 include::../style.adoc[]
 
 
-== Adding Schema to the Schema Registry
+== Schema Registryへのスキーマの追加
 
 
-In this section, you will add a new schema to the Schema Registry and later the producer and consumers will use the schema to send and receive messages.
+このセクションでは、Schema Registryに新しいスキーマを追加します。後ほど、ProducerとConsumerがこのスキーマを使用してメッセージを送受信します。
 
 // * First let's create a topic that we can use for this section. Run the following command in the *upper terminal*.
 // +
@@ -17,43 +17,43 @@ In this section, you will add a new schema to the Schema Registry and later the 
 
 // NOTE: If you logged out of the toolbox use the following command to log back in: `oc rsh -n kafka-{user_name} kafka-toolbox`
 
-* Navigate to the {registry} UI by clicking the link: https://service-registry-ui-{user_name}.{openshift_cluster_subdomain}[Schema Registry, window="_schema-registry"].
+* リンクをクリックして{registry} UIに移動します: https://service-registry-ui-{user_name}.{openshift_cluster_subdomain}[Schema Registry, window="_schema-registry"]。
 
-* Click on the `Explore` tab
+* `Explore` タブをクリックします
 +
 image::m5/explore-tab.png[]
 
-* You should see the explore page of the Schema Registry UI as shown in the image below.
+* 以下の画像のように、Schema Registry UIのExploreページが表示されます。
 +
 image::m5/schema-registry-ui-explore.png[]
 
-* Click on the `Create Group` button.
+* `Create Group` ボタンをクリックします。
 +
 image::m5/create-group-registry.png[]
 
-* Enter the group name `my-group` and hit the create button.
+* グループ名に `my-group` と入力し、createボタンを押します。
 +
 image::m5/create-mygroup.png[]
 
-* Click on the `Create Artifact` button to create a new schema.
+* `Create Artifact` ボタンをクリックして新しいスキーマを作成します。
 +
 image::m5/create-artifact.png[]
 
 
-* Enter the `schema-demo` in the Artifact Id and select Avro as the schema type. Click on Next.
+* Artifact Idに `schema-demo` と入力し、スキーマタイプとしてAvroを選択します。Nextをクリックします。
 +
 image::m5/artifact-coordinates.png[]
 
 [NOTE]
 ====
-We will also create a topic called `schema-demo` in the subsequent steps. However,The Artifact Id and topic name don't need to always be the same. In our case, we are using the SimpleTopicIdStrategy, so we used the same name. There are different strategies that you can use. You can learn more about them link:https://docs.redhat.com/en/documentation/red_hat_build_of_apicurio_registry/3.1/html/apicurio_registry_user_guide/using-kafka-client-serdes_registry#registry-serdes-concepts-strategy_registry[here].
+次のステップで `schema-demo` という名前のトピックも作成します。ただし、Artifact Idとトピック名は常に同じである必要はありません。今回のケースでは、SimpleTopicIdStrategyを使用しているため、同じ名前を使用しました。使用できる異なるストラテジーがあります。詳細については link:https://docs.redhat.com/en/documentation/red_hat_build_of_apicurio_registry/3.1/html/apicurio_registry_user_guide/using-kafka-client-serdes_registry#registry-serdes-concepts-strategy_registry[こちら] で確認できます。
 ====
 
-* All the fields in the next screen are optional. Leave them blank and click on Next.
+* 次の画面のすべてのフィールドはオプションです。空白のままにしてNextをクリックします。
 +
 image::m5/artifact-metadata.png[]
 
-* On the next screen, under the contents section, copy and paste the below schema. Leave the Version number field blank. This is a simple Avro schema for a customer record.
+* 次の画面のcontentsセクションで、以下のスキーマをコピー&ペーストします。Version numberフィールドは空白のままにします。これは顧客レコード用のシンプルなAvroスキーマです。
 +
 [source,avro,role="execute",subs=attributes+]
 ----
@@ -74,21 +74,21 @@ image::m5/artifact-metadata.png[]
 }
 ----
 
-* Click on Next.
+* Nextをクリックします。
 +
 image::m5/create-schema.png[]
 
-* This is a simple schema which defines the rules for the fields of the message containing the customer data. You can learn more about Avro schemas link:https://avro.apache.org/[here].
+* これは顧客データを含むメッセージのフィールドのルールを定義するシンプルなスキーマです。Avroスキーマについての詳細は link:https://avro.apache.org/[こちら] で確認できます。
 
-* Click on Create on the final screen while leaving the fields blank.
+* 最終画面でフィールドを空白のままにしてCreateをクリックします。
 +
 image::m5/create-schema-final.png[]
 
-* The artifact should take a couple of seconds to be created and then you should see the schema in the *Schema Registry UI* as shown in the image below.
+* Artifactの作成には数秒かかります。その後、以下の画像のように *Schema Registry UI* にスキーマが表示されます。
 +
 image::m5/schema-created.png[]
 
-* Great job! You have successfully added a new schema to the Schema Registry. 
+* 素晴らしい!Schema Registryに新しいスキーマを正常に追加できました。
 
-=== Up Next
-In the next section, we will see how the producer and consumer application use this schema to send and receive messages and make sure that the messages conform to the schema.
+=== 次のステップ
+次のセクションでは、ProducerとConsumerアプリケーションがこのスキーマを使用してメッセージを送受信し、メッセージがスキーマに準拠していることを確認する方法を見ていきます。

@@ -1,68 +1,68 @@
 :imagesdir: ../../assets/images
 include::../style.adoc[]
 
-== Verify Change Events are Captured
+== Change Eventがキャプチャされたことを確認
 
-* One way to verify that the connector is working is to create some change events in the database by creating some orders through the Globex retail application.
+* connectorが動作していることを確認する1つの方法は、Globex retailアプリケーションを通じていくつかの注文を作成することで、データベースにchange eventを作成することです。
 
-* Click on the browser tab pointing to the Globex retail application. If you don't have a browser tab open on the application, navigate to the link:{globex_web_url}[Globex retail application, window="_globex"] to launch the application.
+* Globex retailアプリケーションを指しているブラウザタブをクリックします。アプリケーションでブラウザタブを開いていない場合は、link:{globex_web_url}[Globex retail application, window="_globex"]に移動してアプリケーションを起動します。
 
-* Click on the login button on the top right corner of the application. 
+* アプリケーションの右上隅にあるログインボタンをクリックします。
 +
 image::m4/globex-login.png[]
 
-* Log in with any of the username listed here `asilva`/`cjones`/`asanders`/`pwong`/`mmiller``. The password is `openshift`.
+* ここにリストされているユーザー名のいずれかでログインします `asilva`/`cjones`/`asanders`/`pwong`/`mmiller`。パスワードは `openshift` です。
 +
 image::m4/login_credentials_page.png[]
 
-* Once logged in, click on the *Cool Stuff Store* link on the tob bar to navigate to the store.
+* ログインしたら、トップバーの *Cool Stuff Store* リンクをクリックしてストアに移動します。
 +
 image::m4/cool-stuff-store.png[]
 
-* Click on the item of your choice to open the product details page and then click on the *Add to Cart* button to add the item to your shopping cart. Feel free to browse and add multiple items to your cart, so that we can simulate a larger number of orders.
+* 選択したアイテムをクリックして製品詳細ページを開き、*Add to Cart* ボタンをクリックしてアイテムをショッピングカートに追加します。より多くの注文をシミュレートできるように、複数のアイテムをカートに追加してください。
 +
 image::m4/add_to_cart.png[]
 
-* Click on the shopping cart icon on the top right corner to open your shopping cart.
+* 右上隅のショッピングカートアイコンをクリックしてショッピングカートを開きます。
 +
 image::m4/cart_icon.png[]
 
-* Feel free to adjust the quantity of the items in your cart .  *Proceed to Checkout* button to proceed to checkout.
+* カート内のアイテムの数量を自由に調整してください。*Proceed to Checkout* ボタンをクリックしてチェックアウトに進みます。
 +
 image::m4/proceed_to_checkout.png[]
 
-* Click on the *Autofill Form* button to autofill the checkout form
+* *Autofill Form* ボタンをクリックしてチェックアウトフォームを自動入力します
 +
 image::m4/autofill.png[]
 
-* Click on *Submit Order* to submit your order.
+* *Submit Order* をクリックして注文を送信します。
 +
 image::m4/submit_order.png[]
 
-* You should see an order confirmation page similar to the following.
+* 次のような注文確認ページが表示されます。
 +
 image::m4/order_confirmation_page.png[]
 
-* Now that you have created some orders in the Globex retail application, let's verify that the Debezium connector has captured the corresponding change events in the database and produced them to the appropriate Kafka topics.
+* Globex retailアプリケーションでいくつかの注文を作成したので、Debezium connectorがデータベース内の対応するchange eventをキャプチャし、適切なKafkaトピックに生成したことを確認しましょう。
 
-* Open the browser tab pointing to the streams for Apache Kafka console UI. If you did close the tab, navigate to https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}[streams for Apache Kafka console, window="_amqstreams"]. 
+* streams for Apache Kafka console UIを指しているブラウザタブを開きます。タブを閉じた場合は、https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}[streams for Apache Kafka console, window="_amqstreams"]に移動します。
 
-* From the Topics page, open the *globex.updates.public.orders* topic, and verify that the topic contains 1 message.
+* Topicsページから、*globex.updates.public.orders* トピックを開き、トピックに1つのメッセージが含まれていることを確認します。
 +
 image::m4/amq-console-debezium-topic-orders.png[]
 
-* Click on the message to expand it.  You should see a change event structure very similar to the ones for customers. Notice however that the operation is '*c*', for _create_. This is expected as the change event corresponds to a new record in the *order* table.
+* メッセージをクリックして展開します。顧客のものと非常に似たchange event構造が表示されるはずです。ただし、操作が _create_ の場合は '*c*' であることに注意してください。これは、change eventが *order* テーブルの新しいレコードに対応するため、期待通りです。
 +
 image::m4/amq-console-debezium-topic-order-details.png[]
 
-* Go back to the streams for Apache Kafka Console topics page, and this time open the *globex.updates.public.line_item* topic. You should see one message per item in the order you created previously.
+* streams for Apache Kafka Consoleのトピックページに戻り、今度は *globex.updates.public.line_item* トピックを開きます。以前に作成した注文のアイテムごとに1つのメッセージが表示されるはずです。
 +
 image::m4/amqconsole-debezium-topic-line-items.png[]
 
 
-* If you want to simulate a larger number of orders, you can use the _Order simulator_ application deployed in the _globex-{user_name}_ namespace on OpenShift.
+* より多くの注文をシミュレートしたい場合は、OpenShiftの _globex-{user_name}_ namespaceにデプロイされた _Order simulator_ アプリケーションを使用できます。
 
-* In the browser window, open the tab pointing to the OpenShift console. If you don't have a tab open to the console, click navigate to {openshift_cluster_console}/topology/ns/globex-{user_name}?view=graph[OpenShift console, window="_console"]. If needed login with your username and password (`{user_name}`/`{password}``).
+* ブラウザウィンドウで、OpenShiftコンソールを指しているタブを開きます。コンソールのタブが開いていない場合は、{openshift_cluster_console}/topology/ns/globex-{user_name}?view=graph[OpenShift console, window="_console"]に移動します。必要に応じて、ユーザー名とパスワード（`{user_name}`/`{password}`）でログインします。
 
 
 // * Switch to the *globex-{user_name}* namespace by selecting the namespace from the namespace selection drop-down menu in the top left.
@@ -70,28 +70,28 @@ image::m4/amqconsole-debezium-topic-line-items.png[]
 // image::m4/openshift-console-developer-select-namespace.png[]
 
 
-* In the Topology view, click on the  route link next to the *order-simulator* deployment shown below.
+* Topologyビューで、以下に示す *order-simulator* デプロイメントの横にあるrouteリンクをクリックします。
 +
 image::m4/openshift-route-order-simulator.png[]
 
 
-* This opens a Swagger UI page showing the REST API of the simulator. +
-Click on the *POST* link, and then on the *Try it out* link, on the right.
+* これにより、シミュレーターのREST APIを示すSwagger UIページが開きます。+
+*POST* リンクをクリックし、次に右側の *Try it out* リンクをクリックします。
 +
 image::m4/order-simulator-swagger-ui-post.png[]
 
 
-* From the *Examples* drop down, select *random customers* to create orders for random customers. Feel free to change the numbers of orders you want to simulate (the default is 50).
+* *Examples* ドロップダウンから、*random customers* を選択してランダムな顧客の注文を作成します。シミュレートする注文の数を自由に変更してください（デフォルトは50です）。
 +
 image::m4/order-simulator-random-customer.png[]
 
-* Click *Execute* to execute the REST call to the simulator.
+* *Execute* をクリックして、シミュレーターへのREST呼び出しを実行します。
 
-* Check in https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}[streams for Apache Kafka console, window="_amqstreams"] that new messages are produced to the *globex.updates.public.orders* and *globex.updates.public.line_item* topics.
+* https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}[streams for Apache Kafka console, window="_amqstreams"]で、*globex.updates.public.orders* と *globex.updates.public.line_item* トピックに新しいメッセージが生成されていることを確認します。
 
-* This shows how Debezium can be used to capture change events from a relational database and produce them to Kafka topics in real-time, enabling event-driven architectures and data integration scenarios.
+* これは、Debeziumをリレーショナルデータベースからchange eventをキャプチャし、それらをリアルタイムでKafkaトピックに生成するために使用できる方法を示しており、イベント駆動型アーキテクチャとデータ統合シナリオを可能にします。
 
-=== Up Next
-In the next section, we will see some practical applications of change data capture in the context of the Globex retail application.
+=== 次のステップ
+次のセクションでは、Globex retailアプリケーションのコンテキストでChange Data Captureのいくつかの実用的なアプリケーションを見ていきます。
 
 

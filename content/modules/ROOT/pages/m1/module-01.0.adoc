@@ -1,71 +1,71 @@
 :imagesdir: ../../assets/images
 include::../style.adoc[]
 
-== Module 1: 
+== Module 1:
 {m1}
 
-=== Basics - What is a Kafka Cluster?
+=== 基礎 - Kafka Clusterとは？
 
-A Kafka cluster is the whole distributed system that stores and moves your events. It’s made up of multiple Kafka processes with specific roles:
+Kafka Clusterは、イベントを保存し移動する分散システム全体です。特定の役割を持つ複数のKafkaプロセスで構成されています。
 
-Controllers (KRaft): keep the cluster’s metadata (what topics/partitions exist, which broker leads which partition, etc.) and run leader elections.
+Controllers (KRaft): Clusterのメタデータ（どのtopic/partitionが存在するか、どのbrokerがどのpartitionをリードするか、など）を保持し、leader選出を実行します。
 
-Brokers: store data and serve client traffic .
+Brokers: データを保存し、クライアントトラフィックを処理します。
 
-=== Why clusters matter:
+=== Clusterが重要な理由：
 
-* Scalability: add more brokers → more throughput and storage.
+* スケーラビリティ: brokerを追加することで、スループットとストレージが増加します。
 
-* Fault tolerance: replicate partitions across brokers so a node loss doesn’t lose data or availability.
+* フォールトトレランス（耐障害性）: brokerをまたいでpartitionをReplicationすることで、ノード障害が発生してもデータや可用性が失われません。
 
-* Central bootstrap: clients connect to a single “bootstrap” address (e.g., my-kafka-kafka-bootstrap:9092) and discover the rest.
+* 一元的なbootstrap: クライアントは単一の”bootstrap”アドレス（例：my-kafka-kafka-bootstrap:9092）に接続し、残りのノードを発見します。
 
-* In OpenShift/AMQ Streams with KRaft + Node Pools:
+* OpenShift/AMQ StreamsでのKRaft + Node Pools:
 
-** The Kafka CR defines cluster-wide settings (Kafka version, listeners, configs).
+** Kafka CRはCluster全体の設定（Kafkaバージョン、リスナー、設定）を定義します。
 
-** KafkaNodePool CRs create sets of controller nodes and broker nodes.
+** KafkaNodePool CRsはcontrollerノードとbrokerノードのセットを作成します。
 
-=== What is a Broker?
+=== Brokerとは？
 
-A broker:
+Brokerの役割：
 
-* Stores topic partitions on disk (append-only logs, with retention policies).
+* Topicのpartitionをディスク上に保存します（追記専用ログ、保持期間ポリシー付き）。
 
-* Handles produce (writes) and consume (reads) requests.
+* produce（書き込み）とconsume（読み込み）リクエストを処理します。
 
-* Replicates partitions to/from peers; one broker is the leader for a partition, others are followers (when replication factor > 1).
+* ピアとの間でpartitionをReplicationします。1つのbrokerがpartitionのleaderとなり、他のbrokerはfollowerとなります（replication factor > 1の場合）。
 
 image::m1/broker_image.png[]
 
-=== Cluster Details - Walkthrough
-A kafka cluster made up of 3 brokers has already been created for this workshop. You will be working with this cluster throughout this workshop. Let's quickly explore the high-level details of the cluster using the {streams} console.
+=== Cluster詳細 - ウォークスルー
+このワークショップでは、3つのbrokerで構成されるKafka Clusterがすでに作成されています。このワークショップを通じてこのClusterを使用します。{streams} consoleを使用してClusterの高レベルな詳細を簡単に確認しましょう。
 
-* Click https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka/[here, window="_amqstreams"] to navigate to the {streams} console.
+* https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka/[こちら, window=”_amqstreams”]をクリックして{streams} consoleに移動します。
 
-* Login anonymously to the console.
+* consoleに匿名でログインします。
 +
 image::m1/console_anonymous.png[]
 
-* Click on the *Clusters overview* tab.
+* *Clusters overview*タブをクリックします。
 +
 image::m1/console_clusters_overview.png[]
 
-* Under the *Kafka cluster details* section, you will find details such as the name of the cluster, the number of brokers and the Kafka version
+* *Kafka cluster details*セクションには、Cluster名、brokerの数、Kafkaバージョンなどの詳細が表示されます。
 +
 image::m1/cluster_details.png[]
 
-* Click on the *Cluster connection details* tab to view the details on how to connect to the cluster.
+* *Cluster connection details*タブをクリックして、Clusterへの接続方法の詳細を確認します。
 +
 image::m1/connectiond_details.png[]
 
-* This should list all the bootstrap servers for the cluster and the authentication method they use. We shall learn more about them later. But for now, this is how we connect to the cluster.
+* ここには、Clusterのすべてのbootstrap serverと、それらが使用する認証方法がリストされます。詳細については後ほど学習します。現時点では、これがClusterへの接続方法です。
 +
 image::m1/bootstrap_server_details.png[]
 +
-NOTE: The external bootstrap server section should be empty as we currently have not enabled access to the Kafka cluster from outside the OpenShift cluster.
+NOTE: 現在OpenShift Clusterの外部からKafka Clusterへのアクセスを有効にしていないため、external bootstrap serverセクションは空になっているはずです。
 
-This concludes a very high-level overview of how Kafka clusters and brokers work. In the next module we'll learn about Kafka topics and create a topic.
+以上で、Kafka ClusterとBrokerの動作に関する非常に高レベルな概要は終了です。次のモジュールでは、Kafka topicについて学習し、topicを作成します。
 
 
 

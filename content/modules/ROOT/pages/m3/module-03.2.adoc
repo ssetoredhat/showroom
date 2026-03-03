@@ -2,47 +2,47 @@
 include::../style.adoc[]
 
 
-== Activity
+== アクティビティ
 
 
-* Let's take a look at the code that the _recommendation engine_ application uses to calculate the list of featured products. Click here to see the code: https://github.com/rh-cloud-architecture-workshop/recommendation-engine/blob/main/src/main/java/org/globex/retail/streams/TopologyProducer.java[TopologyProducer.java, window="_blank"]
+* _recommendation engine_アプリケーションがおすすめ製品のリストを計算するために使用しているコードを見てみましょう。コードを見るにはここをクリックしてください: https://github.com/rh-cloud-architecture-workshop/recommendation-engine/blob/main/src/main/java/org/globex/retail/streams/TopologyProducer.java[TopologyProducer.java, window=”_blank”]
 
-* *Prepare the input stream from the Kafka topic trackingEventTopic for downstream processing (Line 45 - 46)* . This is the entry point of the pipeline
-+ 
+* *Kafka topic trackingEventTopicからの入力ストリームを下流処理用に準備する (Line 45 - 46)* 。これがパイプラインのエントリーポイントです
++
 [source,java]
 ----
 KTable<String, ProductScore> productLikes =
     builder.stream(trackingEventTopic, Consumed.with(Serdes.String(), Serdes.String()));
----- 
+----
 
-** Creating a Stream from a Kafka Topic - `builder.stream(...)` tells Kafka Streams to start reading a continuous flow of records from the Kafka topic.
+** Kafka TopicからStreamを作成 - `builder.stream(...)`は、Kafka Streamsに対してKafka topicから連続的なレコードフローの読み取りを開始するよう指示します。
 
-** Serializers/Deserializers - `Consumed.with(Serdes.String(), Serdes.String())` tells Kafka Streams how to read the data — here both key and value are plain strings..
+** Serializers/Deserializers - `Consumed.with(Serdes.String(), Serdes.String())`は、Kafka Streamsにデータの読み取り方法を指示します。ここでは、keyとvalueの両方がプレーンな文字列です。
 
 
-* *Transformations and aggregations(Line 47-51)* - This block takes raw user activity messages → parses them → filters irrelevant ones → converts to product scores → groups by product → and finally aggregates likes.
+* *変換と集約(Line 47-51)* - このブロックは、生のユーザーアクティビティメッセージを取得 → 解析 → 無関係なものをフィルタリング → 製品スコアに変換 → 製品ごとにグループ化 → 最後に「いいね」を集約します。
 +
 [source,java]
 ----
 .mapValues(JsonObject::new)
-.filter((key, value) -> value.getJsonObject("actionInfo") != null 
-    && value.getJsonObject("actionInfo").getString("productId") != null)
+.filter((key, value) -> value.getJsonObject(“actionInfo”) != null
+    && value.getJsonObject(“actionInfo”).getString(“productId”) != null)
 .mapValues(value -> new ProductScore.Builder(
-    value.getJsonObject("actionInfo").getString("productId")).build())
-.groupBy((key, value) -> value.getProductId(), 
+    value.getJsonObject(“actionInfo”).getString(“productId”)).build())
+.groupBy((key, value) -> value.getProductId(),
     Grouped.with(Serdes.String(), productLikesSerde))
 .reduce(ProductScore::sum)
 
 ----
-** Convert & Clean Data - Turns each JSON string into a JsonObject and filters out records that don’t have a valid product ID.
+** データの変換とクリーニング - 各JSON文字列をJsonObjectに変換し、有効な製品IDを持たないレコードを除外します。
 
-** Create ProductScore Objects - Creates a new ProductScore object for each message.
+** ProductScoreオブジェクトの作成 - 各メッセージに対して新しいProductScoreオブジェクトを作成します。
 
-** Group by Product - Regroups the stream so all events for the same product go together. Behind the scenes, Kafka Streams creates an internal topic to shuffle and group related records
+** 製品ごとにグループ化 - 同じ製品のすべてのイベントが一緒になるようにストリームを再グループ化します。舞台裏では、Kafka Streamsが関連するレコードをシャッフルおよびグループ化するための内部topicを作成します。
 
-** Reduce (Aggregate Scores) - Keeps a running total of each product’s score in a state store.The result is a KTable showing the current popularity of every product.
+** Reduce（スコアの集約） - 各製品のスコアの累計をstate storeに保持します。結果は、すべての製品の現在の人気度を示すKTableです。
 
-* *Continuously keep track of the Top-N featured products per category by listening to all product score updates, storing and updating the results automatically (Line 53-57)*
+* *すべての製品スコアの更新をリスニングし、結果を自動的に保存・更新することで、カテゴリごとのTop-Nおすすめ製品を継続的に追跡する (Line 53-57)*
 +
 [source,java]
 ----
@@ -60,21 +60,21 @@ productLikes
 
 ----
 
-** Group by Category - Re-keys the stream so all products in the same category are grouped together. Prepares data for per-category aggregation.
+** カテゴリごとにグループ化 - 同じカテゴリのすべての製品が一緒にグループ化されるようにストリームを再キー化します。カテゴリごとの集約のためにデータを準備します。
 
-** Aggregate: Build a Top-N List per Category
+** Aggregate: カテゴリごとのTop-Nリストを構築
 
-*** Initializer: creates an empty fixed-size queue that will keep only the top-scoring products.
+*** Initializer: 上位スコアの製品のみを保持する空の固定サイズキューを作成します。
 
-*** Adder: adds or updates a product in that queue when a new score arrives.
+*** Adder: 新しいスコアが到着したときに、そのキュー内の製品を追加または更新します。
 
-*** Subtractor: removes the old entry if a product’s score changes (keeps results accurate).
+*** Subtractor: 製品のスコアが変更された場合、古いエントリを削除します（結果を正確に保ちます）。
 
-*** Each category now has its own “Top N products” list that updates in real time.
+*** 各カテゴリには、リアルタイムで更新される独自の「Top N製品」リストがあります。
 
-** Materialize to a Store -Saves these category-wise top lists in a local state store called aggregationStore. Kafka Streams also writes a changelog to Kafka so state can be restored if the app restarts.
+** Storeへのマテリアライズ - これらのカテゴリごとのトップリストをaggregationStoreという名前のローカルstate storeに保存します。Kafka Streamsは、アプリの再起動時に状態を復元できるように、changelogもKafkaに書き込みます。
 
-=== Conclusion
-In conclusion, Kafka Streams enables applications to receive data from one or more input streams. You can use this API to run a sequence of real-time operations on streams of data, like mapping, filtering, and joining.  Hopefully this was helpful in understanding how Kafka Streams lets you process and react to data as it flows. It bridges the gap between real-time messaging and continuous computation — turning a stream of simple Kafka events into live, evolving insights.
+=== まとめ
+まとめると、Kafka Streamsはアプリケーションが1つ以上の入力ストリームからデータを受信できるようにします。このAPIを使用して、マッピング、フィルタリング、結合などのリアルタイム操作のシーケンスをデータストリーム上で実行できます。これが、Kafka Streamsがデータの流れに応じて処理し反応する方法を理解するのに役立てば幸いです。Kafka Streamsは、リアルタイムメッセージングと継続的な計算の間のギャップを埋め、シンプルなKafkaイベントのストリームをライブで進化する洞察に変えます。
 
 

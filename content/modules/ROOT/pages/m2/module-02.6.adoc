@@ -4,59 +4,59 @@ include::../style.adoc[]
 :cross: ×
 
 
-== Quarkus and Kafka
-Quarkus significantly simplifies interaction with Kafka compared to using the bare Apache Kafka Client in plain Java by leveraging the SmallRye Reactive Messaging framework based on the MicroProfile Reactive Messaging specification. This abstraction removes boilerplate code, manages low-level concerns like threading, serialization, and offset commits, and provides an annotation-driven, message-channel model.
+== QuarkusとKafka
+Quarkusは、MicroProfile Reactive Messaging仕様に基づくSmallRye Reactive Messagingフレームワークを活用することで、プレーンなJavaでベアなApache Kafka Clientを使用する場合と比較して、Kafkaとの対話を大幅に簡素化します。この抽象化により、定型コードが削除され、スレッド化、serialization、offsetコミットなどの低レベルの懸念が管理され、アノテーション駆動のmessage-channelモデルが提供されます。
 
-Let's look at how the activity tracking service uses Quarkus to produce and consume messages to and from Kafka topics.
+activity trackingサービスがQuarkusを使用してKafka topicとの間でメッセージをproduceおよびconsumeする方法を見てみましょう。
 
-* Open the KafkaService.java file in the activity-tracking project by clicking on this link https://github.com/rh-cloud-architecture-workshop/activity-tracking-service/blob/main/src/main/java/org/globex/retail/KafkaService.java[link, window="_github"].This file is the Kafka producer responsible for sending user activity events to the Kafka topic.
+* このリンクhttps://github.com/rh-cloud-architecture-workshop/activity-tracking-service/blob/main/src/main/java/org/globex/retail/KafkaService.java[link, window="_github"]をクリックして、activity-trackingプロジェクトのKafkaService.javaファイルを開きます。このファイルは、Kafka topicにユーザーアクティビティイベントを送信する責任を持つKafka producerです。
 
-* Feel from to explore the code in detail to understand what's happening.
+* 何が起こっているかを理解するために、コードを詳細に探索してください。
 
 
-=== Simplified Programming Model with Quarkus
-* In plain Java with the Kafka Client, you must manually set up the KafkaProducer or KafkaConsumer, handle configuration, manage threading for continuous polling, perform manual serialization/deserialization, and explicitly commit offsets.
+=== Quarkusによるシンプル化されたプログラミングモデル
+* Kafka Clientを使用したプレーンなJavaでは、KafkaProducerまたはKafkaConsumerを手動でセットアップし、設定を処理し、継続的なpollingのためのスレッドを管理し、手動でserialization/deserializationを実行し、明示的にoffsetをコミットする必要があります。
 
-Quarkus abstracts this into a clean, annotation-based model using @Incoming and @Outgoing. You focus purely on the business logic of processing the message payload.
+Quarkusは、@Incomingと@Outgoingを使用したクリーンなアノテーションベースのモデルにこれを抽象化します。メッセージpayloadを処理するビジネスロジックに純粋に集中できます。
 
-Kafka Producer (Sending Messages)
+Kafka Producer (メッセージの送信)
 |===
-| Aspect | Plain Java(Kafka Client) | Quarkus(Reactive Messaging)
+| 側面 | Plain Java(Kafka Client) | Quarkus(Reactive Messaging)
 | Setup
-| Manually configure *ProducerConfig* (bootstrap servers, serializers), create *KafkaProducer* instance.
-| Inject an Emitter and configure the channel in *application.properties*. Quarkus manages the Producer lifecycle.
+| *ProducerConfig*(bootstrap servers、serializer)を手動で設定し、*KafkaProducer*インスタンスを作成します。
+| Emitterを注入し、*application.properties*でchannelを設定します。QuarkusがProducerライフサイクルを管理します。
 
 | Sending
-| Create a *ProducerRecord*, call *producer.send()*, and handle the returned Future for asynchronous send results.
-| Call the *Emitter.send()* method with the message payload.
+| *ProducerRecord*を作成し、*producer.send()*を呼び出し、非同期送信結果のために返されたFutureを処理します。
+| メッセージpayloadで*Emitter.send()*メソッドを呼び出します。
 |===
 
-Kafka Consumer (Receiving Messages)
+Kafka Consumer (メッセージの受信)
 |===
-| Aspect | Plain Java(Kafka Client) | Quarkus(Reactive Messaging)
+| 側面 | Plain Java(Kafka Client) | Quarkus(Reactive Messaging)
 | Setup
-| Manually configure *ConsumerConfig*, create *KafkaConsumer* instance, and subscribe to topics.
-| Define a simple method with the *@Incoming* annotation. Quarkus manages the Consumer lifecycle and subscription.
+| *ConsumerConfig*を手動で設定し、*KafkaConsumer*インスタンスを作成し、topicをsubscribeします。
+| *@Incoming*アノテーションでシンプルなメソッドを定義します。QuarkusがConsumerライフサイクルとsubscriptionを管理します。
 
 | Consumption Loop
-| You must run a continuous polling loop in a separate thread and handle *ConsumerRecords*
-| Quarkus runs the message processing automatically on a thread.
+| 別のスレッドで継続的なpollingループを実行し、*ConsumerRecords*を処理する必要があります
+| Quarkusはスレッド上でメッセージ処理を自動的に実行します。
 
 | Committing Offsets
-| You must manually call *consumer.commitSync()* or *consumer.commitAsync()* after processing.
-| Automatic acknowledgment (offset commit) is managed by the commit strategies attribute (e.g., throttled).
+| 処理後に*consumer.commitSync()*または*consumer.commitAsync()*を手動で呼び出す必要があります。
+| 自動acknowledgment(offsetコミット)は、commit strategiesアトリビュート(例: throttled)によって管理されます。
 |===
 
-==== Developer Experience
-Quarkus also provides tooling and features that enhance the development and operation of Kafka-based microservices
+==== 開発者エクスペリエンス
+Quarkusは、Kafkaベースのmicroserviceの開発と運用を強化するツールと機能も提供します
 
-* Local Development and Testing - For development and testing, Quarkus has Dev Services. If you have the Kafka extension but no local configuration, Quarkus will automatically start a Kafka broker in a Docker container for you (using Testcontainers).
+* ローカル開発とテスト - 開発とテストのために、QuarkusにはDev Servicesがあります。Kafka extensionがあるがローカル設定がない場合、Quarkusは自動的にDockerコンテナでKafka brokerを起動します(Testcontainersを使用)。
 
-* Shared Broker - Dev Services for Kafka implements a service discovery mechanism for your multiple Quarkus applications running in dev mode to share a single broker.
+* 共有Broker - Kafka用のDev Servicesは、devモードで実行されている複数のQuarkusアプリケーションが単一のbrokerを共有するためのサービスディスカバリメカニズムを実装しています。
 
-* Health Checks - Quarkus provides several health checks for Kafka. These checks are used in combination with the *quarkus-smallrye-health* extension. Some of these checks include: Kafka Broker Readiness Check, Kafka Reactive Messaging Health Checks etc.
+* Health Check - QuarkusはKafka用のいくつかのhealth checkを提供します。これらのcheckは*quarkus-smallrye-health* extensionと組み合わせて使用されます。これらのcheckには、Kafka Broker Readiness Check、Kafka Reactive Messaging Health Checkなどが含まれます。
 
-There are a lot more features and capabilities that makes Quarkus a great choice for Kafka development and testing. You can learn more about Quarkus at link:https://quarkus.io/guides/kafka[Quarkus Kafka Guide, window="_quarkus"].
+Quarkusには、Kafka開発とテストに最適な選択肢となるさらに多くの機能と能力があります。Quarkusの詳細については、link:https://quarkus.io/guides/kafka[Quarkus Kafka Guide, window="_quarkus"]で学ぶことができます。
 
 
 

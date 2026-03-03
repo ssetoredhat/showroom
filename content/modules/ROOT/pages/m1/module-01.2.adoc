@@ -2,27 +2,27 @@
 include::../style.adoc[]
 
 
-== Kafka Basics - Partitions (how Kafka scales & orders)
+== Kafka基礎 - Partitions（Kafkaのスケーリングと順序付け）
 
-Storing the messages in a topic in a single node would limit the scalability of the system. Partitions are the solution for this. A topic is split into partitions, each an ordered, append-only, log that are distributed across brokers. This allows kafka to process a large number of messages in parallel and in a distributed manner. Partitions enable parallelism and throughput.
+Topic内のメッセージを単一のノードに保存すると、システムのスケーラビリティが制限されます。Partitionはこの問題の解決策です。Topicはpartitionに分割され、各partitionは順序付けられた追記専用のログで、broker間に分散されます。これにより、Kafkaは大量のメッセージを並列かつ分散的に処理できます。Partitionは並列処理とスループットを実現します。
 
 image::m1/topic-image.png[]
 
-=== Message Ordering
-* Messages sent to kafka can consist of only a value or a key-value pair. 
+=== メッセージの順序付け
+* Kafkaに送信されるメッセージは、valueのみ、またはkey-valueペアで構成できます。
 
-* Though ordering of the messages is not guaranteed, across a topic, strict order can be achieved within a partition.
+* topic全体ではメッセージの順序は保証されませんが、partition内では厳密な順序を実現できます。
 
-* Sending related messages using the same key so they go to the same partition is a mandatory precondition to achieve strict ordering within a partition.
+* partition内で厳密な順序を実現するには、関連するメッセージを同じkeyを使用して送信し、同じpartitionに配置することが必須の前提条件です。
 
 
-=== Replication & Fault Tolerance
+=== ReplicationとFault Tolerance
 
-* Each partition has one leader and replicas (followers).
+* 各partitionには1つのleaderとreplica（follower）があります。
 
-* The leader handles all reads and writes for the partition.
+* leaderはpartitionのすべての読み取りと書き込みを処理します。
 
-* Producers/consumers talk to the leader; followers keep up via replication.
+* Producer/ConsumerはLeaderと通信します。followerはreplicationを介して同期を保ちます。
 
 image::m1/replication-broker.png[]
 
@@ -31,22 +31,22 @@ image::m1/replication-broker.png[]
 
 
 
-=== Exercise
+=== 演習
 
-* Click https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka/[here, window="_amqstreams"] to navigate to the {streams} console to view the topic you created.
+* https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}/kafka/[こちら, window="_amqstreams"]をクリックして{streams} consoleに移動し、作成したtopicを確認します。
 
-* Click on *Topics* in the left menu to see the list of topics. You should see the `demo` topic you created. Click on the `demo` topic and then navigate to the *Partitions* tab. You should see the `demo` topic  has 3 partitions.
+* 左側のメニューで*Topics*をクリックしてtopicのリストを表示します。作成した`demo` topicが表示されるはずです。`demo` topicをクリックして、*Partitions*タブに移動します。`demo` topicには3つのpartitionがあることを確認できます。
 +
 image::m1/partitions-image-console.png[]
 
-* The partitions are spread across different brokers to ensure fault tolerance. The leader column shows the Broker ID in which the partition is located. 
+* partitionは、フォールトトレランス（耐障害性）を確保するために異なるbrokerに分散されています。leader列には、partitionが配置されているBroker IDが表示されます。
 +
 image::m1/leader-image-console.png[]
 
 
-* The replicas column typically shows the broker IDs of the other brokers that hold replicas of the partition and currently there are empty since we have created our topic with replication factor of 1 (which is not recommended in a production setup).
+* replicas列には通常、partitionのreplicaを保持する他のbrokerのbroker IDが表示されますが、現在はreplication factorが1のtopicを作成したため空になっています（本番環境では推奨されません）。
 +
 image::m1/replica-image-console.png[]
 
-=== Up Next
-This concludes a very high-level overview of how Kafka partitions work. In the next module, we'll learn about kafka producers and consumers.
+=== 次のステップ
+以上で、Kafka partitionの動作に関する非常に高レベルな概要は終了です。次のモジュールでは、Kafka producerとconsumerについて学習します。

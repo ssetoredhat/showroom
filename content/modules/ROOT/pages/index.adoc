@@ -1,77 +1,77 @@
 
-== Event Streaming
-Event streaming is a modern approach to building data-intensive applications that are responsive, resilient, and scalable. It enables real-time data processing and integration across diverse systems, making it ideal for today's fast-paced digital environments.
-Event streaming treats every change in your business (an order placed, payment authorized, sensor reading, log line, click) as an event written to an append-only log. Instead of pushing data directly from one service to another, systems publish events once and many consumers independently read, process, and react—now or later.
+== Event Streaming（イベントストリーミング）
+Event Streaming は、レスポンシブで回復力があり、スケーラブルなデータ集約型アプリケーションを構築するための最新アプローチです。多様なシステム間でリアルタイムのデータ処理と統合を可能にし、今日のペースの速いデジタル環境に最適です。
+Event Streaming は、ビジネスにおけるすべての変更（注文の受付、支払いの承認、センサーの読み取り、ログ行、クリック）をイベントとして追加専用ログに記録します。あるサービスから別のサービスにデータを直接プッシュする代わりに、システムはイベントを一度パブリッシュし、多数のConsumerが独立して読み取り、処理し、反応します—今すぐにも、後からでも。
 
 image::intro/event-streaming.png[]
 
-Key properties:
+主な特性:
 
-* **Durable log with retention:** Events stick around for hours, days, or longer, enabling replay and backfills.
+* **耐久性のあるログと保持期間:** イベントは数時間、数日、またはそれ以上保持され、リプレイとバックフィルを可能にします。
 
-* **Decoupling:** Producers and consumers evolve independently; new consumers can be added without changing producers.
+* **疎結合:** ProducerとConsumerは独立して進化し、Producerを変更せずに新しいConsumerを追加できます。
 
-* **Scalable fan-out:** One event can feed real-time apps, analytics, ML features, and audit trails at the same time.
+* **スケーラブルなファンアウト:** 1つのイベントで、リアルタイムアプリ、分析、ML機能、監査証跡を同時に提供できます。
 
-=== Why Kafka?
+=== なぜKafkaなのか？
 
-Kafka is the most widely used event-streaming platform because it combines:
+Kafkaは、以下を組み合わせているため、最も広く使用されているイベントストリーミングプラットフォームです:
 
-. **High throughput & low latency:** Horizontal scaling via partitions across brokers.
+. **高スループット & 低レイテンシ:** Broker間でのPartitionによる水平スケーリング。
 
-. **Per-partition ordering:** Reliable ordering for related keys (e.g., all events for customer X).
+. **Partition単位の順序保証:** 関連するキーに対する信頼性の高い順序付け（例：顧客Xのすべてのイベント）。
 
-. **Replayability:** Consumers track their own offsets, so they can pause, catch up, or reprocess historic data.
+. **リプレイ可能性:** Consumerは自分のOffsetを追跡するため、一時停止、キャッチアップ、または履歴データの再処理が可能です。
 
-. **Strong delivery options:** From at-least-once to exactly-once (with idempotence/transactions) for robust pipelines.
+. **強力な配信オプション:** At-least-onceからExactly-once（冪等性/トランザクション使用）まで、堅牢なパイプラインを実現。
 
-. **Ecosystem & interoperability:** Connectors, stream processing libraries, and standard APIs used across the industry.
+. **エコシステムと相互運用性:** Connector、ストリーム処理ライブラリ、および業界全体で使用される標準APIを提供。
 
-=== Common Kafka use cases (with patterns you’ll recognize)
+=== 一般的なKafkaのユースケース（よく見られるパターン）
 
-* **Payments & risk:** Real-time scoring on auth events; asynchronous settlement; chargeback analytics.
+* **決済とリスク管理:** 認証イベントのリアルタイムスコアリング、非同期決済、チャージバック分析。
 
-* **E-commerce:** Orders, inventory, pricing, and clickstream flowing to services and analytics in parallel.
+* **Eコマース:** 注文、在庫、価格設定、クリックストリームがサービスと分析に並行して流れる。
 
-* **IoT/telemetry:** Millions of device readings ingested and aggregated continuously.
+* **IoT/テレメトリ:** 数百万のデバイス読み取り値が継続的に取り込まれ、集約される。
 
-* **Change Data Capture (CDC):** Database changes emitted as events to sync systems or build audit trails.
+* **Change Data Capture (CDC):** データベースの変更がイベントとして発行され、システムの同期や監査証跡の構築に使用される。
 
-* **Operational analytics:** Streams to warehouses/lakes for near-real-time dashboards and anomaly detection.
+* **運用分析:** ストリームをウェアハウス/レイクに送信し、ほぼリアルタイムのダッシュボードと異常検知を実現。
 
-* **Microservices choreography:** Services publish domain events; others react (SAGA patterns, outbox, DLT).
+* **Microservicesのコレオグラフィ:** サービスがドメインイベントをパブリッシュし、他のサービスが反応（SAGAパターン、Outbox、DLT）。
 
-* **Log aggregation:** Unified transport for logs and security events with long-enough retention to reprocess.
+* **ログ集約:** ログとセキュリティイベントの統一トランスポート、再処理に十分な保持期間を持つ。
 
-=== When Kafka might not be the right fit
-While we recommend Kafka for many use cases, there are some cases where it may not be the right fit.
+=== Kafkaが適さない場合
+多くのユースケースでKafkaを推奨していますが、適さない場合もあります。
 
-* Simple RPC or synchronous request/response between two services (use HTTP/gRPC).
+* 2つのサービス間のシンプルなRPCまたは同期的なrequest/response（HTTP/gRPCを使用）。
 
-* Tiny workloads or one-off tasks where a lightweight queue is simpler.
+* 軽量なキューの方がシンプルな小規模ワークロードや1回限りのタスク。
 
-* Huge binary blobs (store in object storage; send references via Kafka).
+* 巨大なバイナリブロブ（オブジェクトストレージに保存し、Kafka経由で参照を送信）。
 
-=== What is {streams}?
-Running Kafka on OpenShift without native support can be complex. While deploying Kafka directly with standard resources like StatefulSet and Service is possible, the process is often error-prone and time-consuming. This is especially true for operations like upgrades and configuration updates. {streams} dramatically reduces this complexity, providing the following advantages:
+=== {streams}とは？
+ネイティブサポートなしでOpenShift上でKafkaを実行するのは複雑になる可能性があります。StatefulSetやServiceなどの標準リソースでKafkaを直接デプロイすることは可能ですが、そのプロセスはエラーが発生しやすく、時間がかかります。これは、アップグレードや構成の更新などの運用で特に顕著です。{streams}はこの複雑さを大幅に軽減し、以下の利点を提供します:
 
-*{streams}* is Kafka built for OpenShift/Kubernetes” : This product can also be deployed on RHEL or other systems that support JVM supported by us, even though Strimzi can’t. *{streams}* provides a the following advantages:
+*{streams}* は OpenShift/Kubernetes向けに構築されたKafkaです。この製品は、Strimziではできないものの、Red Hat Enterprise Linux (RHEL)やサポート対象のJVMをサポートする他のシステムにもデプロイできます。*{streams}*は以下の利点を提供します:
 
-* **Native OpenShift integration**: {streams} transforms Kafka into an OpenShift-native application. It extends the Kubernetes API with Custom Resources (CRs) like Kafka, KafkaTopic, and KafkaUser. Custom resources offer a stable and highly configurable way to manage Kafka.
+* **ネイティブなOpenShift統合**: {streams}はKafkaをOpenShiftネイティブなアプリケーションに変換します。Kafka、KafkaTopic、KafkaUserなどのCustom Resources (CR)でKubernetes APIを拡張します。Custom Resourcesは、Kafkaを管理するための安定で高度に設定可能な方法を提供します。
 
-* **Declarative cluster management:**  Manage the lifecycle of your Kafka resources declaratively. Declarative control allows you to manage resources like topics and users directly in YAML
+* **宣言的なCluster管理:**  Kafkaリソースのライフサイクルを宣言的に管理します。宣言的な制御により、TopicやユーザーなどのリソースをYAMLで直接管理できます。
 
-* **Support for upgrade, scaling, and recovery:** {streams} operators automate rolling upgrades and recovery of Kafka components, helping to reduce manual intervention and downtime
+* **アップグレード、スケーリング、リカバリのサポート:** {streams} Operatorは、Kafkaコンポーネントのローリングアップグレードとリカバリを自動化し、手動介入とダウンタイムの削減を支援します。
 
-* **Integrated support for data streaming pipelines:** When Streams for Apache Kafka is installed, you can deploy and manage Kafka clusters alongside supporting components such as Kafka Connect, MirrorMaker 2, and Kafka Bridge, all using OpenShift-native custom resources.
+* **データストリーミングパイプラインの統合サポート:** Streams for Apache Kafkaがインストールされると、Kafka Connect、MirrorMaker 2、Kafka Bridgeなどのサポートコンポーネントと共にKafka Clusterをデプロイおよび管理でき、すべてOpenShiftネイティブなCustom Resourcesを使用します。
 
-* **Integrated security:** Enables fine-grained access control through listener-level authentication, cluster-wide authorization, and network policies. Simplifies certificate management and manages secure client access through KafkaUser resources with ACLs, quotas, and handling of credentials.
+* **統合されたセキュリティ:** Listenerレベルの認証、Cluster全体の認可、ネットワークポリシーによるきめ細かいアクセス制御を実現します。証明書管理を簡素化し、ACL、クォータ、および資格情報の処理を備えたKafkaUserリソースを介して安全なクライアントアクセスを管理します。
 
 
 
-=== Workshop Objectives
+=== ワークショップの目的
 
-This workshop introduces you to the fundamentals of Event Streaming with *{streams}*. You will learn key concepts such as topics, partitions, producers, consumers, consumer groups, and replication. You will also gain hands-on experience by using a sample application to understand these concepts.
+このワークショップでは、*{streams}*を使ったEvent Streamingの基礎を学びます。Topic、Partition、Producer、Consumer、Consumer Group、Replicationなどの主要な概念を学び、サンプルアプリケーションを使用してこれらの概念を理解する実践的な経験を得られます。
 
-This workshop is intended for developers and architects who are new to event streaming and want to learn how to use Kafka for building real-time data pipelines and streaming applications. 
+このワークショップは、Event Streamingが初めての開発者やアーキテクトで、リアルタイムデータパイプラインやストリーミングアプリケーションの構築にKafkaを使用する方法を学びたい方を対象としています。 
 

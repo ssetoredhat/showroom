@@ -1,70 +1,70 @@
 :imagesdir: ../../assets/images
 include::../style.adoc[]
 
-== Deploy the Debezium Connector
+== Debezium Connectorのデプロイ
 
-Let's start with deploying the Debezium Connector. With {streams}, a Kafka Connect connector can be deployed as a Kubernetes Custom Resource, which is picked up and processed by the streams for Apache Kafka operator.
+まず、Debezium Connectorをデプロイしましょう。{streams}では、Kafka Connect connectorはKubernetes Custom Resourceとしてデプロイでき、streams for Apache Kafka operatorによって処理されます。
 
-To deploy the connector, you are going to use OpenShift Dev Spaces. OpenShift Dev Spaces uses Kubernetes and containers to provide a consistent, secure, and zero-configuration development environment, accessible from a browser window.
+connectorをデプロイするために、OpenShift Dev Spacesを使用します。OpenShift Dev SpacesはKubernetesとコンテナを使用して、ブラウザウィンドウからアクセス可能な、一貫性があり安全でゼロ設定の開発環境を提供します。
 
-* In a browser window, navigate to the browser tab pointing to the OpenShift cluster console. If you don't have a browser tab open on the console, Navigate to the link:{openshift_cluster_console}[OpenShift console, window="console"] to launch the console. If needed login with your username and password (`{user_name}`/`{password}`).
+* ブラウザウィンドウで、OpenShiftクラスターコンソールを指しているブラウザタブに移動します。コンソールでブラウザタブを開いていない場合は、link:{openshift_cluster_console}[OpenShift console, window="console"]に移動してコンソールを起動します。必要に応じて、ユーザー名とパスワード（`{user_name}`/`{password}`）でログインします。
 
-* If you have not already launched Devspaces, open the Devspaces IDE from the top right corner of your OpenShift console.
+* まだDevspacesを起動していない場合は、OpenShiftコンソールの右上隅からDevspaces IDEを開きます。
 +
 image::m4/devspaces.png[]
 
-* Click on the "log in with OpenShift" button.
+* "log in with OpenShift" ボタンをクリックします。
 +
 image::m4/login-openshift.png[]
 
-* Log in using your credentials  - `{user_name}` and `{password}`.
+* 認証情報を使用してログインします - `{user_name}` と `{password}`。
 
 
-* From the Devspaces dashboard, click on *open* button to launch your workspace.
+* Devspacesダッシュボードから、*open* ボタンをクリックしてワークスペースを起動します。
 +
 image::m4/devspaces-launch.png[]
 
-* Once the workspace is launched, Click on *Yes, I trust the authors* to proceed.
+* ワークスペースが起動したら、*Yes, I trust the authors* をクリックして続行します。
 +
 image::m4/devspaces-trust.png[]
 
 
-* The workspace contains all the resources you are going to use during the workshop, including the Debezium connector. In the project explorer on the left of the workspace, navigate to the *kafka-workshop/module-cdc* folder and open the *debezium-connector.yaml* file.
+* ワークスペースには、Debezium connectorを含む、ワークショップ中に使用するすべてのリソースが含まれています。ワークスペースの左側にあるプロジェクトエクスプローラーで、*kafka-workshop/module-cdc* フォルダに移動し、*debezium-connector.yaml* ファイルを開きます。
 +
 image::m4/devspaces-workspace-debezium-connector.png[]
 
-* The *debezium-connector.yaml* file describes the Debezium Connector. It contains all the details the connector needs to know in order to start capturing changes in the target database tables. Some important configuration details:
-** *class*: the Debezium connector implementation class. We're using PostgreSQL as source database, so the approriate connector is *io.debezium.connector.postgresql.PostgresConnector*.
-** *plugin.name*: The Debezium connector supports different mechanisms to read from the PostgreSQL transaction logs.  *pgoutput* is the standard logical decoding output plug-in since PostgreSQL 10.
-** *+database.*+*: the connection details for the database. Note that PostgreSQL is setup with a specific user (*debezium*) which has the required privileges to read from the transaction logs.
-** *topic.prefix*: the prefix of the Kafka topics which will receive the Debezium change events. The full name of the topics is *<prefix>.<schema>.<table>*.
-** *schema.include.list*: the schema's to include in the change data capture process.
-** *table.include.list*: the name of the tables to include. For our use case, we are interested in the *customer*, *orders* and *line_item* tables.
+* *debezium-connector.yaml* ファイルはDebezium Connectorを記述しています。このファイルには、connectorがターゲットデータベーステーブルの変更をキャプチャするために知っておく必要があるすべての詳細が含まれています。いくつかの重要な設定の詳細:
+** *class*: Debezium connectorの実装クラス。ソースデータベースとしてPostgreSQLを使用しているため、適切なconnectorは *io.debezium.connector.postgresql.PostgresConnector* です。
+** *plugin.name*: Debezium connectorはPostgreSQLトランザクションログから読み取るための異なるメカニズムをサポートしています。*pgoutput* はPostgreSQL 10以降の標準的な論理デコーディング出力プラグインです。
+** *+database.*+*: データベースの接続詳細。PostgreSQLは、トランザクションログから読み取るために必要な権限を持つ特定のユーザー（*debezium*）で設定されていることに注意してください。
+** *topic.prefix*: Debezium change eventを受信するKafkaトピックのプレフィックス。トピックのフルネームは *<prefix>.<schema>.<table>* です。
+** *schema.include.list*: Change Data Captureプロセスに含めるスキーマ。
+** *table.include.list*: 含めるテーブルの名前。このユースケースでは、*customer*、*orders*、*line_item* テーブルに関心があります。
 
-* Before deploying the connector, you need to substitute the placeholder for the database hostname with the actual value. *On line 14, replace*
+* connectorをデプロイする前に、データベースホスト名のプレースホルダーを実際の値に置き換える必要があります。*14行目で、置き換えます*
 +
 ----
 <REPLACE WITH DATABASE HOSTNAME>
 ----
 +
-with
+以下に
 +
 [source,textinfo,role=execute,subs="attributes"]
 ----
 globex-db.globex-{user_name}.svc.cluster.local
 ----
 +
-which is the internal DNS name of the Globex retail application database.
+これはGlobex retailアプリケーションデータベースの内部DNS名です。
 
-* You can deploy the connector to the OpenShift cluster directly from Dev Spaces. *In the Devspaces IDE*, open a new terminal by clicking on the menu on the top left corner. Then select *Terminal > New Terminal.* to launch a new terminal window.
+* Dev SpacesからOpenShiftクラスターにconnectorを直接デプロイできます。*Devspaces IDE* で、左上隅のメニューをクリックして新しいターミナルを開きます。次に、*Terminal > New Terminal.* を選択して新しいターミナルウィンドウを起動します。
 +
 image::m4/devspaces-terminal.png[]
 
-* This opens a terminal in the bottom half of the workspace. 
+* これにより、ワークスペースの下半分にターミナルが開きます。
 +
 image::m4/devspaces-menu-terminal.png[]
 
-* Make sure your are on the kafka-workshop folder on the terminal. If you are on the module-kafka-api folder, run the following command to navigate to the kafka-workshop folder.
+* ターミナルでkafka-workshopフォルダにいることを確認してください。module-kafka-apiフォルダにいる場合は、次のコマンドを実行してkafka-workshopフォルダに移動します。
 +
 [source,bash,role=execute,subs="attributes"]
 ----
@@ -95,7 +95,7 @@ cd ..
 // ----
 // ====
 
-* Deploy the Debezium connector by copying the following command to the terminal:
+* ターミナルに次のコマンドをコピーしてDebezium connectorをデプロイします:
 +
 [source,bash,role=execute,subs="attributes"]
 ----
@@ -107,40 +107,40 @@ oc apply -f module-cdc/debezium-connector.yaml -n globex-cdc-{user_name}
 kafkaconnector.kafka.strimzi.io/globex created
 ----
 
-* After a few seconds, the Debezium connector will start monitoring the PostgreSQL database for changes in the *customer*, *orders* and *line_item* tables, and will produce a change event to the corresponding Kafka topic for each change detected.
+* 数秒後、Debezium connectorはPostgreSQLデータベースの *customer*、*orders*、*line_item* テーブルの変更の監視を開始し、検出された各変更に対して対応するKafkaトピックにchange eventを生成します。
 
-* One way to verify that the connector is working as expected is to check the Kafka topics that receive the change events.  
+* connectorが期待通りに動作していることを確認する1つの方法は、change eventを受信するKafkaトピックをチェックすることです。
 
-* Navigate to https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}[streams for Apache Kafka console, window="_amqstreams"].
+* https://amq-streams-console-{user_name}.{openshift_cluster_subdomain}[streams for Apache Kafka console, window="_amqstreams"]に移動します。
 
-** This redirects you to the *streams for Apache Kafka console* login page. 
+** これにより、*streams for Apache Kafka console* のログインページにリダイレクトされます。
 
-** For the purpose of this workshop, choose *Click to login anonymously* to access the console if you are not already signed in.
+** このワークショップの目的のため、まだサインインしていない場合は *Click to login anonymously* を選択してコンソールにアクセスします。
 +
 image::common/console_anonymous.png[]
 
-* Navigate to *Topics* menu on the left hand side. 
+* 左側の *Topics* メニューに移動します。
 +
-Filter the topics by *Name*  by the term `globex.updates`. Intitially, you will only see one topic, `globex.updates.public.customer`, that will receive the change events.
+`globex.updates` という用語でトピックを *Name* でフィルタリングします。最初は、change eventを受信する1つのトピック `globex.updates.public.customer` のみが表示されます。
 +
 image::m4/console-cdc-filter-topics.png[]
 
-* The Globex application database contains records for a couple of hundred customers in the *customer* table, so we can expect a change event for each of these records. In the streams for Apache Kafka console's topics page, click on the *globex.updates.public.customer* topic. This opens a view with details on the topic. Notice that the Offset of the topmost (latest) message is _199_, which corresponds to the number of records in the *customer* table. 
+* Globexアプリケーションデータベースには *customer* テーブルに数百人の顧客のレコードが含まれているため、これらの各レコードに対してchange eventが期待されます。streams for Apache Kafka consoleのトピックページで、*globex.updates.public.customer* トピックをクリックします。これにより、トピックの詳細を含むビューが開きます。最上位（最新）メッセージのOffsetが _199_ であることに注目してください。これは *customer* テーブルのレコード数に対応しています。
 +
-NOTE: that Offsets start at _0_. An Offset of _199_ means that there are _200_ messages in the topic.
+NOTE: Offsetは _0_ から始まります。Offsetが _199_ の場合、トピックには _200_ 個のメッセージがあることを意味します。
 +
 image::m4/amqconsole-debezium-topic-customers.png[]
 
-* You can expand every message to inspect its content. In this case, the body of each message consists of a Debezium change event in JSON format. Click on the topmost message to expand it.
+* すべてのメッセージを展開してその内容を調べることができます。この場合、各メッセージの本文はJSON形式のDebezium change eventで構成されています。最上位のメッセージをクリックして展開します。
 +
 image::m4/amqconsole-debezium-topic-customers-200.png[]
 
-* A Debezium change event has a well-defined structure. Take particular note of the following elements:
-** *before*: the state of the record before the transaction. As the change events correspond to newly read records, there is no previous state. 
-** *after*: the state of the record after the transaction. This is a JSON representation of the current state of the record in the database (every column in the table becomes a JSON field).
-** *op*: The operation that leads to the change event. Possible values are '*c*' for _create_, '*u*' for _update_, '*d*' for _delete_ and '*r*' for _read_. As the records in the *customer* already existed when the Debezium connector was deployed, the operation is '*r*'.
+* Debezium change eventには明確に定義された構造があります。次の要素に特に注意してください:
+** *before*: トランザクション前のレコードの状態。change eventは新しく読み取られたレコードに対応するため、前の状態はありません。
+** *after*: トランザクション後のレコードの状態。これはデータベース内のレコードの現在の状態のJSON表現です（テーブルのすべての列がJSONフィールドになります）。
+** *op*: change eventにつながる操作。可能な値は _create_ の場合は '*c*'、_update_ の場合は '*u*'、_delete_ の場合は '*d*'、_read_ の場合は '*r*' です。Debezium connectorがデプロイされたときに *customer* のレコードはすでに存在していたため、操作は '*r*' です。
 
-* The Globex application database does not contain any order information at the moment, so the *globex.updates.public.orders* and *globex.updates.public.line_item* topics are not yet created. You can verify this through the streams for Apache Kafka console. 
+* Globexアプリケーションデータベースには現時点で注文情報が含まれていないため、*globex.updates.public.orders* と *globex.updates.public.line_item* トピックはまだ作成されていません。これはstreams for Apache Kafka consoleを通じて確認できます。
 
-=== Up Next
-In the next section of the workshop, you will create some orders, and verify that the corresponding change events are picked up by Debezium and published to the above mentioned two topics.  
+=== 次のステップ
+ワークショップの次のセクションでは、いくつかの注文を作成し、対応するchange eventがDebeziumによって取得され、前述の2つのトピックに公開されることを確認します。  

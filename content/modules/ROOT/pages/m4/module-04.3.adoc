@@ -2,15 +2,15 @@
 include::../style.adoc[]
 
 
-== Globex Loyalty Program with Change Data Capture
+== Change Data Captureを使用したGlobex Loyalty Program
 
-* To understand a sample application that uses Change Data Capture, we will create a loyalty program that tracks customer purchases and awards loyalty points. The loyalty program application will consume change events from the Debezium topics and update loyalty points accordingly.
+* Change Data Captureを使用するサンプルアプリケーションを理解するために、顧客の購入を追跡し、ロイヤルティポイントを付与するロイヤルティプログラムを作成します。ロイヤルティプログラムアプリケーションは、DebeziumトピックからのChange Eventを消費し、それに応じてロイヤルティポイントを更新します。
 
-* Navigate to the browser tab with the link:https://devspaces.{openshift_cluster_subdomain}[Devspaces IDE, window="devspaces"]Devspaces IDE opened from the previous section.
+* 前のセクションから開いているlink:https://devspaces.{openshift_cluster_subdomain}[Devspaces IDE, window="devspaces"]Devspaces IDEのブラウザタブに移動します。
 
-* Select the *loyalty-deployment.yaml* file in the *kafka-workshop/module-cdc* folder
+* *kafka-workshop/module-cdc* フォルダ内の *loyalty-deployment.yaml* ファイルを選択します
 
-* Replace the placeholder value for the bootstrap servers(line 28) with the following value
+* bootstrap servers（28行目）のプレースホルダー値を次の値に置き換えます
 +
 [source,bash,role=execute,subs="attributes"]
 ----
@@ -19,43 +19,43 @@ kafka-kafka-bootstrap.kafka-{user_name}.svc.cluster.local:9092
 
 
 
-* Deploy the loyalty program application to your OpenShift project by running the following command in your devspaces terminal
+* devspacesターミナルで次のコマンドを実行して、ロイヤルティプログラムアプリケーションをOpenShiftプロジェクトにデプロイします
 +
 [source,bash,role=execute,subs="attributes"]
 ----
 oc apply -f module-cdc/loyalty-deployment.yaml -n globex-{user_name}
 ----
 
-* This deploys a simple Quarkus application that consumes change events from the Debezium topics and updates loyalty points accordingly. Check the deployment status and make sure the application is running.
+* これにより、DebeziumトピックからのChange Eventを消費し、それに応じてロイヤルティポイントを更新するシンプルなQuarkusアプリケーションがデプロイされます。デプロイメントステータスを確認し、アプリケーションが実行されていることを確認します。
 +
 [source,bash,role=execute,subs="attributes"]
 ----
 oc get pods -n globex-{user_name} -l app=cdc-dashboard -w
 ----
 
-* Once the status of the pod shows *Running*, type `ctrl+c` in the devspaces terminal. 
+* podのステータスが *Running* と表示されたら、devspacesターミナルで `ctrl+c` と入力します。
 
-* You can access the loyalty program dashboard by navigating to the route created for the application.
+* アプリケーション用に作成されたrouteに移動することで、ロイヤルティプログラムダッシュボードにアクセスできます。
 
-* Open the link:https://cdc-dashboard-globex-{user_name}.{openshift_cluster_subdomain}[Loyalty Program Dashboard, window="loyalty"] to access the loyalty program dashboard deployed in the globex-{user_name} 
+* link:https://cdc-dashboard-globex-{user_name}.{openshift_cluster_subdomain}[Loyalty Program Dashboard, window="loyalty"]を開いて、globex-{user_name}にデプロイされたロイヤルティプログラムダッシュボードにアクセスします
 
-* This dashboard builds a real-time view of customer loyalty points based on the change events captured from the Globex retail application database. It uses the messages in the *globex.updates.public.orders* and *globex.updates.public.line_item* topic to track customer purchases and update loyalty points accordingly without directly interacting with the retail application database.
+* このダッシュボードは、Globex retailアプリケーションデータベースからキャプチャされたChange Eventに基づいて、顧客のロイヤルティポイントのリアルタイムビューを構築します。*globex.updates.public.orders* と *globex.updates.public.line_item* トピックのメッセージを使用して、retailアプリケーションデータベースと直接やり取りすることなく、顧客の購入を追跡し、それに応じてロイヤルティポイントを更新します。
 +
 image::m4/loyalty-dashboard.png[]
 
-* As more orders are created in the Globex retail application, the more change events are produced to the Debezium topics, and the loyalty program dashboard updates the loyalty points in real-time.
+* Globex retailアプリケーションでより多くの注文が作成されるほど、Debeziumトピックにより多くのChange Eventが生成され、ロイヤルティプログラムダッシュボードがリアルタイムでロイヤルティポイントを更新します。
 
-* Feel free to generate more orders in the Globex retail application using the link:https://order-simulator-globex-{user_name}.{openshift_cluster_subdomain}[Order Simulator, window="order-simulator"] as shown in the previous section, and see how the loyalty points are updated in real-time in the dashboard.
+* 前のセクションで示したように、link:https://order-simulator-globex-{user_name}.{openshift_cluster_subdomain}[Order Simulator, window="order-simulator"]を使用してGlobex retailアプリケーションでさらに多くの注文を生成し、ダッシュボードでロイヤルティポイントがリアルタイムで更新される様子を確認してください。
 
 
-* The loyalty program application team can now build their own services and applications that leverage the change events produced by Debezium, without having to directly interact with the Globex retail application database. This decouples the loyalty program from the retail application, enabling more flexibility and scalability in building event-driven applications.
+* ロイヤルティプログラムアプリケーションチームは、Globex retailアプリケーションデータベースと直接やり取りすることなく、Debeziumによって生成されたChange Eventを活用する独自のサービスとアプリケーションを構築できるようになりました。これにより、ロイヤルティプログラムがretailアプリケーションから切り離され、イベント駆動型アプリケーションの構築においてより柔軟性とスケーラビリティが実現されます。
 
-* Another use case could be *build a real time order tracker* that could be displayed on screens in the warehouse showing incoming orders as they are created for the warehouse team to process them quickly. You can see a sample application link:https://cdc-dashboard-globex-{user_name}.{openshift_cluster_subdomain}/warehouse[here, window="warehouse"].
+* 別のユースケースとして、*リアルタイム注文トラッカーの構築*があります。これは倉庫のスクリーンに表示され、作成された注文を倉庫チームが迅速に処理できるように着信注文を表示します。サンプルアプリケーションはlink:https://cdc-dashboard-globex-{user_name}.{openshift_cluster_subdomain}/warehouse[こちら, window="warehouse"]で確認できます。
 +
 image::m4/warehouse-dashboard.png[]
 
-* Feel free to explore the source code of the loyalty program application and the order tracker application link:https://github.com/streams-kafka-workshop/module-cdc[here, window="_github"].
+* ロイヤルティプログラムアプリケーションと注文トラッカーアプリケーションのソースコードは、link:https://github.com/streams-kafka-workshop/module-cdc[こちら, window="_github"]で自由に探索してください。
 
-This brings us to the end of this module on Change Data Capture with Debezium. In this module, we have seen how to deploy a Debezium connector to capture change events from a relational database and produce them to Kafka topics in real-time. We also saw how to build simple applications that consume these change events to build event-driven applications.
+これで、DebeziumによるChange Data Captureに関するこのモジュールは終了です。このモジュールでは、リレーショナルデータベースからのChange Eventをキャプチャし、リアルタイムでKafkaトピックに生成するDebezium connectorをデプロイする方法を見てきました。また、これらのChange Eventを消費してイベント駆動型アプリケーションを構築するシンプルなアプリケーションを構築する方法も見ました。
 
 
